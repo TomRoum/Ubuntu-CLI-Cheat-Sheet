@@ -1,0 +1,4832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Practical Ubuntu command-line cheat sheet with fast local search">
+  <title>Ubuntu CLI Cheat Sheet</title>
+
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --surface: #111821;
+      --surface-2: #17212c;
+      --border: #283544;
+      --text: #e8edf2;
+      --muted: #9aa9b8;
+      --accent: #e95420;
+      --accent-2: #ff7849;
+      --code: #0a0e13;
+      --green: #72d572;
+      --blue: #72b7ff;
+      --yellow: #f5c451;
+      --shadow: 0 12px 35px rgba(0,0,0,.28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(233,84,32,.12), transparent 30rem),
+        var(--bg);
+      color: var(--text);
+      font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: var(--accent-2);
+      text-decoration: underline;
+    }
+
+    code,
+    pre,
+    .command {
+      font-family:
+        "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    /* ---------- Hero ---------- */
+
+    .hero {
+      border-bottom: 1px solid var(--border);
+      padding: 60px 20px 45px;
+      background:
+        linear-gradient(135deg, rgba(233,84,32,.13), transparent 55%),
+        rgba(10,14,19,.65);
+    }
+
+    .hero-inner,
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero-inner {
+      text-align: center;
+    }
+
+    .ubuntu-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-size: 28px;
+      font-weight: 800;
+      box-shadow: 0 8px 25px rgba(233,84,32,.3);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.1rem, 6vw, 4rem);
+      line-height: 1.05;
+      letter-spacing: -.04em;
+    }
+
+    .subtitle {
+      max-width: 720px;
+      margin: 18px auto 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .tip {
+      max-width: 760px;
+      margin: 28px auto 0;
+      padding: 15px 18px;
+      border: 1px solid rgba(233,84,32,.35);
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+      background: rgba(233,84,32,.07);
+      text-align: left;
+    }
+
+    .tip strong {
+      color: var(--accent-2);
+    }
+
+    /* ---------- Search toolbar ---------- */
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 12px 0;
+      background: rgba(11,15,20,.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .toolbar-inner {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+      font-size: 1rem;
+    }
+
+    .search {
+      width: 100%;
+      min-width: 0;
+      padding: 12px 85px 12px 40px;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      outline: none;
+      font-size: .95rem;
+    }
+
+    .search:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(233,84,32,.12);
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 7px;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 5px 8px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      display: none;
+    }
+
+    .search-clear:hover {
+      color: var(--text);
+      background: var(--surface-2);
+    }
+
+    .result-count {
+      position: absolute;
+      right: 54px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: .75rem;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 10px 13px;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    button:hover {
+      border-color: var(--accent);
+      background: var(--surface-2);
+    }
+
+    .search-help {
+      width: min(1180px, calc(100% - 32px));
+      margin: 7px auto 0;
+      color: var(--muted);
+      font-size: .76rem;
+    }
+
+    .command-safety-notice {
+      display: none;
+      width: min(1180px, calc(100% - 32px));
+      margin: 10px auto 0;
+      padding: 11px 14px;
+      border: 1px solid rgba(255,193,7,.4);
+      border-left: 4px solid #ffc107;
+      border-radius: 8px;
+      background: rgba(255,193,7,.08);
+      color: #f3dda0;
+      font-size: .84rem;
+    }
+
+    .command-safety-notice strong {
+      color: #ffd45c;
+    }
+
+    kbd {
+      display: inline-block;
+      padding: 1px 5px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--surface-2);
+      color: #cbd5df;
+      font-family: inherit;
+      font-size: .72rem;
+    }
+
+    /* ---------- Main ---------- */
+
+    main {
+      padding: 35px 0 70px;
+    }
+
+    .intro {
+      color: var(--muted);
+      margin-bottom: 30px;
+    }
+
+    .section {
+      margin: 28px 0;
+      scroll-margin-top: 85px;
+    }
+
+    .section > details {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(17,24,33,.82);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      background: linear-gradient(90deg, rgba(233,84,32,.08), transparent);
+    }
+
+    .section summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .section summary::after {
+      content: "+";
+      color: var(--accent);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .section details[open] summary::after {
+      content: "−";
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.45rem;
+    }
+
+    h3 {
+      margin: 30px 22px 12px;
+      font-size: 1.1rem;
+      color: var(--accent-2);
+    }
+
+    .section-content {
+      padding-bottom: 24px;
+    }
+
+    .section-note {
+      margin: 0 22px 18px;
+      color: var(--muted);
+    }
+
+    /* ---------- Tables ---------- */
+
+    .table-wrap {
+      overflow-x: auto;
+      margin: 0 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--surface-2);
+      color: #cbd5df;
+      font-size: .82rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    tbody tr:hover {
+      background: rgba(255,255,255,.025);
+    }
+
+    tbody tr.search-match {
+      background: rgba(233,84,32,.035);
+    }
+
+    .command-cell {
+      width: 30%;
+      position: relative;
+    }
+
+    .command {
+      display: inline-block;
+      padding: 5px 8px;
+      color: var(--green);
+      background: var(--code);
+      border: 1px solid #1f2b38;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .copy {
+      margin-left: 6px;
+      padding: 4px 7px;
+      font-size: .72rem;
+      color: var(--muted);
+      vertical-align: middle;
+    }
+
+    .manual {
+      white-space: nowrap;
+      font-size: .9rem;
+    }
+
+    .operator-table .command-cell {
+      width: 28%;
+    }
+
+    /* ---------- Search highlighting ---------- */
+
+    mark.search-hit {
+      padding: 0 1px;
+      border-radius: 2px;
+      background: rgba(245,196,81,.28);
+      color: #ffe29a;
+    }
+
+    /* ---------- Notes ---------- */
+
+    .warning {
+      margin: 20px 22px;
+      padding: 15px 17px;
+      border: 1px solid rgba(255,193,7,.35);
+      border-left: 4px solid #ffc107;
+      border-radius: 9px;
+      background: rgba(255,193,7,.06);
+      color: #d8dce0;
+    }
+
+    .quick-tip {
+      margin-top: 25px;
+      padding: 20px 22px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface-2);
+    }
+
+    pre {
+      position: relative;
+      margin: 12px 0;
+      padding: 17px;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--code);
+      color: #d7e2eb;
+    }
+
+    pre code {
+      color: inherit;
+    }
+
+    /* ---------- No results ---------- */
+
+    .empty {
+      display: none;
+      padding: 40px 25px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    .empty strong {
+      color: var(--text);
+    }
+
+    .search-suggestion {
+      margin-top: 8px;
+      font-size: .85rem;
+    }
+
+    /* ---------- Footer ---------- */
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 0 50px;
+      color: var(--muted);
+      text-align: center;
+      font-size: .9rem;
+    }
+
+    .back-top {
+      color: var(--muted);
+    }
+
+    /* ---------- Mobile ---------- */
+
+    @media (max-width: 700px) {
+      .hero {
+        padding: 42px 16px 35px;
+      }
+
+      .hero-inner,
+      .container,
+      .search-help {
+        width: min(100% - 22px, 1180px);
+      }
+
+      .command-safety-notice {
+        width: min(100% - 22px, 1180px);
+      }
+
+      .toolbar {
+        padding: 9px 0;
+      }
+
+      .toolbar-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .toolbar-inner > button {
+        width: 100%;
+      }
+
+      .search-help {
+        display: none;
+      }
+
+      .section summary {
+        padding: 17px;
+      }
+
+      h3 {
+        margin-left: 17px;
+        margin-right: 17px;
+      }
+
+      .section-note {
+        margin-left: 17px;
+        margin-right: 17px;
+      }
+
+      .table-wrap {
+        margin: 0 10px;
+      }
+    }
+
+    /* ---------- Print ---------- */
+
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+
+      .toolbar,
+      .search-help,
+      .copy,
+      .back-top {
+        display: none !important;
+      }
+
+      .hero {
+        padding: 20px;
+        background: none;
+      }
+
+      .section > details {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        break-inside: avoid;
+      }
+
+      a {
+        color: black;
+      }
+    }
+  </style>
+</head>
+
+<body id="top">
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="ubuntu-mark" aria-hidden="true">●</div>
+
+    <h1>Ubuntu CLI Cheat Sheet</h1>
+
+    <p class="subtitle">
+      A practical reference for the most common commands used in the
+      Ubuntu command line.
+    </p>
+
+    <div class="tip">
+      <strong>Tip:</strong>
+      For full details on any command, run
+      <code>man &lt;command&gt;</code> in your terminal.
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="container toolbar-inner">
+
+    <div class="search-wrap">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+
+      <input
+        id="search"
+        class="search"
+        type="search"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Search commands, concepts, or descriptions…"
+        aria-label="Search cheat sheet"
+      >
+
+      <span id="resultCount" class="result-count" aria-live="polite"></span>
+
+      <button
+        id="clearSearch"
+        class="search-clear"
+        type="button"
+        aria-label="Clear search"
+        title="Clear search"
+      >×</button>
+    </div>
+
+    <button id="expandAll" type="button">Expand all</button>
+    <button id="collapseAll" type="button">Collapse all</button>
+
+  </div>
+
+  <div id="commandSafetyNotice" class="command-safety-notice" role="status" aria-live="polite"></div>
+
+  <div class="search-help">
+    Search is local to this page.
+    Try <kbd>copy directory</kbd>, <kbd>permissions</kbd>,
+    <kbd>pipe</kbd>, or <kbd>grep</kbd>.
+    Press <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>K</kbd> to focus.
+  </div>
+</div>
+
+<main class="container">
+
+  <p class="intro">
+    Click a section to expand it. Search accepts multiple words and ranks
+    the most relevant commands first.
+  </p>
+
+  <!-- ============================================================
+       CLI BASICS
+       ============================================================ -->
+
+  <section class="section searchable-section" id="cli-basics">
+    <details open>
+      <summary>
+        <h2>CLI Basics</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <p class="section-note">
+          More detailed explanations are available in Ubuntu's
+          <a href="https://ubuntu.com/server/docs/tutorial/welcome-to-the-terminal/#welcome-to-the-terminal"
+             target="_blank" rel="noopener">
+            Welcome to the terminal
+          </a>
+          tutorial.
+        </p>
+
+        <h3>Navigation</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr data-keywords="location directory current working path where filesystem">
+                <td class="command-cell">
+                  <span class="command">pwd</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Print the current working directory</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/pwd.1.html"
+                     target="_blank" rel="noopener">pwd(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="list directory files folder contents show">
+                <td class="command-cell">
+                  <span class="command">ls</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List files and directories in the current directory</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/ls.1.html"
+                     target="_blank" rel="noopener">ls(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="list long details permissions owner size date files directory">
+                <td class="command-cell">
+                  <span class="command">ls -l</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List entries in long format, including permissions, owner, size, and modification time</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="list hidden dot files all directory contents">
+                <td class="command-cell">
+                  <span class="command">ls -a</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List all entries, including hidden files beginning with <code>.</code></td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="list long hidden all dot files details">
+                <td class="command-cell">
+                  <span class="command">ls -la</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List all entries in long format, including hidden files</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="ll alias list long hidden all">
+                <td class="command-cell">
+                  <span class="command">ll</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Common shell alias for a long directory listing; availability depends on your shell configuration</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="directory itself metadata entry not contents permissions">
+                <td class="command-cell">
+                  <span class="command">ls -ld &lt;dir&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show information about the directory entry itself rather than listing its contents</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="file details permissions owner size type">
+                <td class="command-cell">
+                  <span class="command">ls -l &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show detailed information about a file, including type, permissions, owner, size, and timestamp</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="change directory folder navigate path">
+                <td class="command-cell">
+                  <span class="command">cd &lt;path&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Change to the specified directory</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/cd.1posix.html"
+                     target="_blank" rel="noopener">cd(1posix)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="parent directory up navigate">
+                <td class="command-cell">
+                  <span class="command">cd ..</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Move up to the parent directory</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="home directory user navigate">
+                <td class="command-cell">
+                  <span class="command">cd ~</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Change to the current user's home directory</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="previous directory back navigate">
+                <td class="command-cell">
+                  <span class="command">cd -</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Return to the previous working directory</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="root filesystem top directory navigate">
+                <td class="command-cell">
+                  <span class="command">cd /</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Change to the filesystem root directory</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="parent directory up two levels navigate">
+                <td class="command-cell">
+                  <span class="command">cd ../../</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Move up two directory levels</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Working with the Filesystem</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr data-keywords="create directory folder make">
+                <td class="command-cell">
+                  <span class="command">mkdir &lt;name&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Create a new directory</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/mkdir.1.html"
+                     target="_blank" rel="noopener">mkdir(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="remove directory empty folder delete">
+                <td class="command-cell">
+                  <span class="command">rmdir &lt;name&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Remove an empty directory</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/rmdir.1.html"
+                     target="_blank" rel="noopener">rmdir(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="directory tree structure hierarchy files folders">
+                <td class="command-cell">
+                  <span class="command">tree</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display the directory structure as a tree</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/tree.1.html"
+                     target="_blank" rel="noopener">tree(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="tree directory hierarchy depth recursive folders">
+                <td class="command-cell">
+                  <span class="command">tree -L &lt;n&gt; &lt;path&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display the directory tree to a maximum depth of <code>n</code></td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Working with Files</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr data-keywords="create file empty timestamp update modify">
+                <td class="command-cell">
+                  <span class="command">touch &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Create an empty file or update an existing file's timestamp</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/touch.1.html"
+                     target="_blank" rel="noopener">touch(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="copy file source destination duplicate">
+                <td class="command-cell">
+                  <span class="command">cp &lt;src&gt; &lt;dest&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Copy a file from the source path to the destination path</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/cp.1.html"
+                     target="_blank" rel="noopener">cp(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="copy directory recursive preserve attributes permissions timestamps links archive">
+                <td class="command-cell">
+                  <span class="command">cp -a &lt;src&gt; &lt;dest&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Copy directories recursively while preserving file attributes such as permissions, ownership, timestamps, and symbolic links</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="move rename file directory source destination">
+                <td class="command-cell">
+                  <span class="command">mv &lt;src&gt; &lt;dest&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Move a file or directory; when the destination is another name, this also renames it</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/mv.1.html"
+                     target="_blank" rel="noopener">mv(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="move file directory same name source destination">
+                <td class="command-cell">
+                  <span class="command">mv &lt;src&gt;/file &lt;dest&gt;/file</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Move a file to another directory while keeping the same filename</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="remove delete file">
+                <td class="command-cell">
+                  <span class="command">rm &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Remove a file</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/rm.1.html"
+                     target="_blank" rel="noopener">rm(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="remove delete directory recursive contents files">
+                <td class="command-cell">
+                  <span class="command">rm -r &lt;dir&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Remove a directory recursively, including its contents</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="read display print concatenate file contents stdout">
+                <td class="command-cell">
+                  <span class="command">cat &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Print the contents of a file to standard output</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/cat.1.html"
+                     target="_blank" rel="noopener">cat(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="read view file pager scroll contents">
+                <td class="command-cell">
+                  <span class="command">less &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>View file contents one page at a time with scrolling and search</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/less.1.html"
+                     target="_blank" rel="noopener">less(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="file beginning first lines read">
+                <td class="command-cell">
+                  <span class="command">head -n 20 &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Print the first 20 lines of a file</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/head.1.html"
+                     target="_blank" rel="noopener">head(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="file end last lines read logs">
+                <td class="command-cell">
+                  <span class="command">tail -n 20 &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Print the last 20 lines of a file</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/tail.1.html"
+                     target="_blank" rel="noopener">tail(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="count lines words bytes file statistics">
+                <td class="command-cell">
+                  <span class="command">wc -l &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Count the number of lines in a file</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/wc.1.html"
+                     target="_blank" rel="noopener">wc(1)</a>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Users, Groups &amp; Permissions</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr data-keywords="permissions mode read write execute access owner group numeric symbolic">
+                <td class="command-cell">
+                  <span class="command">chmod &lt;mode&gt; &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Change file permissions using symbolic or numeric notation</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/chmod.1.html"
+                     target="_blank" rel="noopener">chmod(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="owner group ownership permissions user file directory">
+                <td class="command-cell">
+                  <span class="command">chown &lt;user&gt;:&lt;group&gt; &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Change the owner and group associated with a file</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/chown.1.html"
+                     target="_blank" rel="noopener">chown(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="permissions default mask create files directories umask">
+                <td class="command-cell">
+                  <span class="command">umask</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show or set the file creation permission mask used by the shell</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man2/umask.2.html"
+                     target="_blank" rel="noopener">umask(2)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="administrator root elevated privileges superuser permissions">
+                <td class="command-cell">
+                  <span class="command">sudo &lt;command&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Run a command with elevated privileges, subject to the system's sudo policy</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man8/sudo-rs.8.html"
+                     target="_blank" rel="noopener">sudo(8)</a>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Searching</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr data-keywords="search text pattern lines file regular expression regex match">
+                <td class="command-cell">
+                  <span class="command">grep &lt;pattern&gt; &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Search input for lines matching a specified pattern</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/grep.1.html"
+                     target="_blank" rel="noopener">grep(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="search user account passwd users login username">
+                <td class="command-cell">
+                  <span class="command">grep &lt;name&gt; /etc/passwd</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Search the local passwd database for a matching user account name</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="search group membership users groups">
+                <td class="command-cell">
+                  <span class="command">grep &lt;name&gt; /etc/group</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Search the local group database for a matching group name or entry</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="search files filename name pattern recursive directory filesystem">
+                <td class="command-cell">
+                  <span class="command">find &lt;path&gt; -name &lt;pattern&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Search a directory hierarchy for files whose names match a pattern</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/find.1.html"
+                     target="_blank" rel="noopener">find(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="command executable path location binary program installed">
+                <td class="command-cell">
+                  <span class="command">which &lt;command&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show the path of the executable that would be found for a command</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/which.debianutils.1.html"
+                     target="_blank" rel="noopener">which(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="file type identify format mime binary text executable symbolic link">
+                <td class="command-cell">
+                  <span class="command">file &lt;name&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Determine the type and format of a file by inspecting its contents and metadata</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/file.1.html"
+                     target="_blank" rel="noopener">file(1)</a>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+  <!-- ============================================================
+       CLI IN DEPTH
+       ============================================================ -->
+
+  <section class="section searchable-section" id="cli-depth">
+    <details>
+      <summary>
+        <h2>CLI in Depth</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <p class="section-note">
+          More detailed explanations are available in Ubuntu's
+          <a href="https://ubuntu.com/server/docs/tutorial/cli-in-depth/#cli-in-depth"
+             target="_blank" rel="noopener">
+            The command line in depth
+          </a>
+          tutorial.
+        </p>
+
+        <h3>Redirecting Input &amp; Output</h3>
+
+        <div class="table-wrap">
+          <table class="operator-table">
+            <thead>
+              <tr>
+                <th>Syntax</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr data-keywords="redirect stdout output overwrite file">
+                <td class="command-cell">
+                  <span class="command">cmd &gt; file</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Redirect standard output (stdout, file descriptor 1) to a file, replacing its existing contents</td>
+              </tr>
+
+              <tr data-keywords="redirect append stdout output file">
+                <td class="command-cell">
+                  <span class="command">cmd &gt;&gt; file</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Append standard output (stdout, file descriptor 1) to a file</td>
+              </tr>
+
+              <tr data-keywords="redirect stdin input file">
+                <td class="command-cell">
+                  <span class="command">cmd &lt; file</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Use a file as standard input (stdin, file descriptor 0) for the command</td>
+              </tr>
+
+              <tr data-keywords="discard stdout output null silence hide">
+                <td class="command-cell">
+                  <span class="command">cmd &gt; /dev/null</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Discard standard output by redirecting it to <code>/dev/null</code></td>
+              </tr>
+
+              <tr data-keywords="stderr error errors redirect output file">
+                <td class="command-cell">
+                  <span class="command">cmd 2&gt; file</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Redirect standard error (stderr, file descriptor 2) to a file</td>
+              </tr>
+
+              <tr data-keywords="stdout stderr errors output redirect combine merge">
+                <td class="command-cell">
+                  <span class="command">cmd &gt; file 2&gt;&amp;1</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Redirect both standard output and standard error to the same file</td>
+              </tr>
+
+              <tr data-keywords="heredoc multiline stdin input text eof here document">
+                <td class="command-cell">
+                  <span class="command">cmd &lt;&lt; EOF</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Feed multiple lines of text to a command as standard input until a line containing the delimiter is reached</td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Pipes &amp; Command Chaining</h3>
+
+        <div class="table-wrap">
+          <table class="operator-table">
+            <thead>
+              <tr>
+                <th>Syntax</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr data-keywords="pipe stdout stdin output input chain commands">
+                <td class="command-cell">
+                  <span class="command">cmd1 | cmd2</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Send stdout of <code>cmd1</code> to stdin of <code>cmd2</code></td>
+              </tr>
+
+              <tr data-keywords="sequence commands always run semicolon">
+                <td class="command-cell">
+                  <span class="command">cmd1; cmd2</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Run commands in sequence regardless of the previous command's exit status</td>
+              </tr>
+
+              <tr data-keywords="and success exit status conditional chain">
+                <td class="command-cell">
+                  <span class="command">cmd1 &amp;&amp; cmd2</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Run <code>cmd2</code> only if <code>cmd1</code> succeeds with exit status 0</td>
+              </tr>
+
+              <tr data-keywords="or failure error exit status conditional fallback">
+                <td class="command-cell">
+                  <span class="command">cmd1 || cmd2</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Run <code>cmd2</code> only if <code>cmd1</code> fails with a non-zero exit status</td>
+              </tr>
+
+              <tr data-keywords="background process asynchronous job shell">
+                <td class="command-cell">
+                  <span class="command">cmd &amp;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Start a command as a background job</td>
+              </tr>
+
+              <tr data-keywords="group commands redirect output compound command">
+                <td class="command-cell">
+                  <span class="command">{ cmd1; cmd2; } &gt; file</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Group commands in the current shell and redirect their combined standard output</td>
+              </tr>
+
+              <tr data-keywords="subshell separate shell process scope environment">
+                <td class="command-cell">
+                  <span class="command">(cmd1; cmd2)</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Run the grouped commands in a subshell</td>
+              </tr>
+
+              <tr data-keywords="line continuation multiline command long command shell">
+                <td class="command-cell">
+                  <span class="command">cmd1 \</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Continue a command onto the next physical line</td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <div class="warning">
+          <strong>Subshell:</strong>
+          Commands inside <code>( ... )</code> run in a separate shell
+          environment, so changes to shell state such as variables or the
+          working directory do not affect the parent shell.
+        </div>
+
+        <h3>Variables &amp; Environment</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr data-keywords="environment variables environment list shell">
+                <td class="command-cell">
+                  <span class="command">env</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List environment variables, or run a command with a modified environment</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/env.1.html"
+                     target="_blank" rel="noopener">env(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="variable environment value print shell">
+                <td class="command-cell">
+                  <span class="command">echo $VAR</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Print the current value of the shell variable <code>VAR</code></td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="variable shell set assignment local environment">
+                <td class="command-cell">
+                  <span class="command">VAR=value</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Set a shell variable in the current shell</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="export variable environment child process shell">
+                <td class="command-cell">
+                  <span class="command">export VAR=value</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Set a shell variable and export it to child processes</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="remove variable unset environment shell">
+                <td class="command-cell">
+                  <span class="command">unset VAR</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Remove a shell variable</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="exit status return code success failure last command">
+                <td class="command-cell">
+                  <span class="command">echo $?</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Print the exit status of the most recently executed foreground command; 0 conventionally means success</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="pid process id shell current process">
+                <td class="command-cell">
+                  <span class="command">echo $$</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Print the process ID (PID) of the current shell</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <div class="warning">
+          <strong>Note:</strong>
+          In <code>bash</code>, <code>dash</code>, and <code>zsh</code>,
+          <code>echo</code> is normally provided as a shell builtin.
+        </div>
+
+        <h3>Shell Expansion</h3>
+
+        <div class="table-wrap">
+          <table class="operator-table">
+            <thead>
+              <tr>
+                <th>Syntax</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr data-keywords="home directory tilde expansion">
+                <td class="command-cell">
+                  <span class="command">~</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Expands to the current user's home directory, normally represented by <code>$HOME</code></td>
+              </tr>
+
+              <tr data-keywords="variable expansion environment shell dollar parameter">
+                <td class="command-cell">
+                  <span class="command">$VAR</span> or <span class="command">${VAR}</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Expand a variable and substitute its current value</td>
+              </tr>
+
+              <tr data-keywords="command substitution output shell execute nested command">
+                <td class="command-cell">
+                  <span class="command">$(command)</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Run a command and substitute its output into the surrounding command</td>
+              </tr>
+
+              <tr data-keywords="arithmetic calculation math shell expression">
+                <td class="command-cell">
+                  <span class="command">$((expr))</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Perform arithmetic expansion; for example, <code>$((5 + 3))</code> evaluates to <code>8</code></td>
+              </tr>
+
+              <tr data-keywords="brace expansion generate words alternatives">
+                <td class="command-cell">
+                  <span class="command">{a,b,c}</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Brace expansion generates separate words, such as <code>{a,b,c}</code> → <code>a b c</code></td>
+              </tr>
+
+              <tr data-keywords="range expansion sequence numbers brace">
+                <td class="command-cell">
+                  <span class="command">{1..10}</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Brace range expansion generates a sequence, such as <code>{1..5}</code> → <code>1 2 3 4 5</code></td>
+              </tr>
+
+              <tr data-keywords="glob wildcard filename multiple characters files">
+                <td class="command-cell">
+                  <span class="command">*</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Filename glob that matches any sequence of characters</td>
+              </tr>
+
+              <tr data-keywords="glob wildcard filename one character files">
+                <td class="command-cell">
+                  <span class="command">?</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Filename glob that matches any single character</td>
+              </tr>
+
+              <tr data-keywords="glob character class filename wildcard">
+                <td class="command-cell">
+                  <span class="command">[abc]</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Filename glob character class matching one character from the listed set</td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+  <!-- ============================================================
+       GETTING HELP
+       ============================================================ -->
+
+  <section class="section searchable-section" id="help">
+    <details>
+      <summary>
+        <h2>Getting Help</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr data-keywords="manual documentation help reference command">
+                <td class="command-cell">
+                  <span class="command">man &lt;command&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Open the manual page for a command</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="manual documentation man help reference">
+                <td class="command-cell">
+                  <span class="command">man man</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Open the manual page for the <code>man</code> command itself</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/man.1.html"
+                     target="_blank" rel="noopener">man(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="search manuals keyword apropos documentation">
+                <td class="command-cell">
+                  <span class="command">man -k &lt;keyword&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Search manual-page descriptions for a keyword</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="help options usage command documentation">
+                <td class="command-cell">
+                  <span class="command">&lt;command&gt; --help</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Print a brief usage and option summary for a command, when supported</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <div class="quick-tip">
+          <h3 style="margin:0 0 12px;">Quick Tip</h3>
+
+          <p>
+            When you're unsure how a command works, start with:
+          </p>
+
+          <pre><code>man &lt;command&gt;</code></pre>
+
+          <p>For example:</p>
+
+          <pre><code>man ls
+man grep
+man chmod</code></pre>
+        </div>
+
+          </div>
+            </details>
+          </section>
+
+  <!-- ============================================================
+       PACKAGE MANAGEMENT
+       ============================================================ -->
+
+  <section class="section searchable-section" id="package-management">
+    <details>
+      <summary>
+        <h2>Package Management — APT</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <p class="section-note">
+          Ubuntu uses APT for installing, removing, updating, and querying
+          software packages.
+        </p>
+
+        <h3>Repositories &amp; Updates</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="apt package manager update repository repositories refresh package lists">
+                <td class="command-cell">
+                  <span class="command">sudo apt update</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Download the latest package information from configured repositories</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="apt upgrade packages update install newer versions">
+                <td class="command-cell">
+                  <span class="command">sudo apt upgrade</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Upgrade installed packages when dependencies can be satisfied without removing packages</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="apt full upgrade distribution upgrade packages dependencies remove install">
+                <td class="command-cell">
+                  <span class="command">sudo apt full-upgrade</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Perform a more comprehensive upgrade that may install or remove packages to resolve dependency changes</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="apt autoremove unused dependencies packages cleanup">
+                <td class="command-cell">
+                  <span class="command">sudo apt autoremove</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Remove packages that were automatically installed as dependencies and are no longer required</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="apt clean cache package archives disk space cleanup">
+                <td class="command-cell">
+                  <span class="command">sudo apt clean</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Remove downloaded package files from the local APT cache</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="apt autoclean cache package archives cleanup">
+                <td class="command-cell">
+                  <span class="command">sudo apt autoclean</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Remove obsolete package files from the local APT cache</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Installing &amp; Removing Packages</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="apt install package software application">
+                <td class="command-cell">
+                  <span class="command">sudo apt install &lt;package&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Install a package and its required dependencies</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="apt reinstall package broken reinstall software">
+                <td class="command-cell">
+                  <span class="command">sudo apt install --reinstall &lt;package&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Reinstall an already installed package</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="apt remove uninstall package software keep configuration">
+                <td class="command-cell">
+                  <span class="command">sudo apt remove &lt;package&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Remove a package while normally retaining its system configuration files</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="apt purge uninstall package remove configuration files">
+                <td class="command-cell">
+                  <span class="command">sudo apt purge &lt;package&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Remove a package and its associated configuration files</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="apt search package find software repository">
+                <td class="command-cell">
+                  <span class="command">apt search &lt;term&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Search available packages for a name or keyword</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="apt show package information version dependencies description">
+                <td class="command-cell">
+                  <span class="command">apt show &lt;package&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display detailed information about an available or installed package</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="dpkg installed packages list package manager debian ubuntu">
+                <td class="command-cell">
+                  <span class="command">dpkg -l</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List packages known to the dpkg package database</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="dpkg package files installed which package owns file">
+                <td class="command-cell">
+                  <span class="command">dpkg -S &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Find which installed package owns a particular file</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       SYSTEM INFORMATION
+       ============================================================ -->
+
+  <section class="section searchable-section" id="system-information">
+    <details>
+      <summary>
+        <h2>System Information</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="system information kernel operating system linux version">
+                <td class="command-cell">
+                  <span class="command">uname -a</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display kernel name, hostname, kernel release, version, machine architecture, and related information</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="kernel version linux release version">
+                <td class="command-cell">
+                  <span class="command">uname -r</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display the running Linux kernel release</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="ubuntu version operating system release distribution information">
+                <td class="command-cell">
+                  <span class="command">cat /etc/os-release</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display operating-system identification and release information</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="hostname computer name machine name system">
+                <td class="command-cell">
+                  <span class="command">hostname</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display the system's hostname</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="hostname ip address dns fqdn network name">
+                <td class="command-cell">
+                  <span class="command">hostname -I</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display the system's configured IP addresses</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="cpu processor architecture cores information">
+                <td class="command-cell">
+                  <span class="command">lscpu</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display detailed CPU architecture and processor information</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="memory ram information total free available used">
+                <td class="command-cell">
+                  <span class="command">free -h</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display RAM and swap usage in human-readable units</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="memory ram detailed proc meminfo">
+                <td class="command-cell">
+                  <span class="command">cat /proc/meminfo</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display detailed kernel memory statistics</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="pci hardware devices graphics gpu network card">
+                <td class="command-cell">
+                  <span class="command">lspci</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List PCI devices such as graphics cards, network adapters, and controllers</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="usb hardware devices peripherals">
+                <td class="command-cell">
+                  <span class="command">lsusb</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List connected USB devices</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="environment variables shell environment">
+                <td class="command-cell">
+                  <span class="command">printenv</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Print environment variables</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="uptime system running load average time">
+                <td class="command-cell">
+                  <span class="command">uptime</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show how long the system has been running and the load averages</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="date time timezone current clock">
+                <td class="command-cell">
+                  <span class="command">date</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display the current system date and time</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       PROCESSES & JOBS
+       ============================================================ -->
+
+  <section class="section searchable-section" id="processes">
+    <details>
+      <summary>
+        <h2>Processes &amp; Jobs</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="process list running processes ps">
+                <td class="command-cell">
+                  <span class="command">ps</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display processes associated with the current shell</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="process list all users running processes ps aux">
+                <td class="command-cell">
+                  <span class="command">ps aux</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display a detailed list of running processes for all users</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="process tree hierarchy parent child processes">
+                <td class="command-cell">
+                  <span class="command">pstree</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display running processes as a parent/child tree</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="process monitor cpu memory interactive top">
+                <td class="command-cell">
+                  <span class="command">top</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Interactively monitor processes, CPU usage, memory usage, and system load</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="process monitor cpu memory interactive better htop">
+                <td class="command-cell">
+                  <span class="command">htop</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Interactive process viewer with a more convenient interface than <code>top</code>; may need to be installed</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="process pid process id find process">
+                <td class="command-cell">
+                  <span class="command">pgrep &lt;name&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Find process IDs matching a process name or pattern</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="process kill terminate pid signal">
+                <td class="command-cell">
+                  <span class="command">kill &lt;PID&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Send the default termination signal to a process</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="process force kill terminate signal SIGKILL">
+                <td class="command-cell">
+                  <span class="command">kill -9 &lt;PID&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Forcefully terminate a process using SIGKILL; use only when normal termination does not work</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="process kill name terminate pkill">
+                <td class="command-cell">
+                  <span class="command">pkill &lt;name&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Send a signal to processes selected by name or pattern</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="background shell jobs list jobs">
+                <td class="command-cell">
+                  <span class="command">jobs</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List jobs started by the current shell</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="background job suspend resume foreground shell">
+                <td class="command-cell">
+                  <span class="command">fg</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Bring a shell job into the foreground</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="background job resume shell">
+                <td class="command-cell">
+                  <span class="command">bg</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Resume a suspended shell job in the background</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="process command run priority nice cpu priority">
+                <td class="command-cell">
+                  <span class="command">nice -n 10 &lt;command&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Run a command with an adjusted CPU scheduling niceness value</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <div class="warning">
+          <strong>Warning:</strong>
+          Prefer normal termination with <code>kill &lt;PID&gt;</code> before using
+          <code>kill -9</code>. SIGKILL does not give the process an opportunity
+          to clean up.
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       DISK & STORAGE
+       ============================================================ -->
+
+  <section class="section searchable-section" id="disk-storage">
+    <details>
+      <summary>
+        <h2>Disk &amp; Storage</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="disk filesystem space usage free used human readable df">
+                <td class="command-cell">
+                  <span class="command">df -h</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show filesystem disk-space usage in human-readable units</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="disk filesystem inode space df">
+                <td class="command-cell">
+                  <span class="command">df -i</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show inode usage for mounted filesystems</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="disk directory file size usage space du">
+                <td class="command-cell">
+                  <span class="command">du -sh &lt;path&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show the total size of a file or directory in human-readable form</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="disk directory size sort largest files space">
+                <td class="command-cell">
+                  <span class="command">du -h --max-depth=1</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show the sizes of immediate subdirectories and files in human-readable form</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="disk block devices partitions drives lsblk storage">
+                <td class="command-cell">
+                  <span class="command">lsblk</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List block devices, disks, partitions, and mount points</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="disk block devices filesystem uuid mount points detailed">
+                <td class="command-cell">
+                  <span class="command">lsblk -f</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List block devices together with filesystem type, labels, UUIDs, and mount points</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="mounted filesystems mount points storage">
+                <td class="command-cell">
+                  <span class="command">findmnt</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display mounted filesystems and their mount relationships</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="mount filesystem disk device directory">
+                <td class="command-cell">
+                  <span class="command">mount</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display currently mounted filesystems</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="filesystem type file disk identify">
+                <td class="command-cell">
+                  <span class="command">blkid</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display block-device attributes such as filesystem type, UUID, and label</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="disk file space largest sort">
+                <td class="command-cell">
+                  <span class="command">du -ah &lt;path&gt; | sort -h</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show file and directory sizes and sort them numerically by size</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       NETWORKING
+       ============================================================ -->
+
+  <section class="section searchable-section" id="networking">
+    <details>
+      <summary>
+        <h2>Networking</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <h3>Interfaces &amp; Addresses</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="network interface ip address addresses ethernet wifi">
+                <td class="command-cell">
+                  <span class="command">ip addr</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display network interfaces and their IP addresses</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="network interface addresses concise ip a">
+                <td class="command-cell">
+                  <span class="command">ip -br addr</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display a concise summary of network interfaces and addresses</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="network interface link state up down ethernet wifi ip link">
+                <td class="command-cell">
+                  <span class="command">ip link</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display network interfaces and their link state</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="routing route gateway network ip">
+                <td class="command-cell">
+                  <span class="command">ip route</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display the kernel's IP routing table</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="default gateway route network">
+                <td class="command-cell">
+                  <span class="command">ip route get 1.1.1.1</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show which route and interface would be used to reach a destination</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Connectivity &amp; DNS</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="network connectivity ping host reachability icmp">
+                <td class="command-cell">
+                  <span class="command">ping &lt;host&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Send ICMP echo requests to test basic network reachability</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="dns lookup domain name ip address resolver">
+                <td class="command-cell">
+                  <span class="command">getent hosts &lt;hostname&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Resolve a hostname using the system's configured name-service mechanisms</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="dns lookup domain resolver nslookup">
+                <td class="command-cell">
+                  <span class="command">nslookup &lt;domain&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Query DNS information; availability depends on installed DNS utilities</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="dns lookup domain dig record server">
+                <td class="command-cell">
+                  <span class="command">dig &lt;domain&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Perform detailed DNS queries; commonly provided by the <code>dnsutils</code> package</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="network connections ports listening tcp udp socket ss">
+                <td class="command-cell">
+                  <span class="command">ss -tuln</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show listening TCP and UDP sockets with numeric addresses and ports</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="network connections processes ports listening sockets">
+                <td class="command-cell">
+                  <span class="command">ss -tulpn</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show listening sockets together with associated processes when permitted</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="network route trace hops traceroute destination">
+                <td class="command-cell">
+                  <span class="command">traceroute &lt;host&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Trace the network path toward a destination; may need to be installed</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <h3>NetworkManager</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="networkmanager network status wifi ethernet nmcli">
+                <td class="command-cell">
+                  <span class="command">nmcli device status</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show the status of NetworkManager-managed network devices</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="wifi wireless networks scan nmcli">
+                <td class="command-cell">
+                  <span class="command">nmcli device wifi list</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List nearby Wi-Fi networks visible to NetworkManager</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="networkmanager connections profiles list nmcli">
+                <td class="command-cell">
+                  <span class="command">nmcli connection show</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List configured NetworkManager connection profiles</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       ARCHIVES & COMPRESSION
+       ============================================================ -->
+
+  <section class="section searchable-section" id="archives">
+    <details>
+      <summary>
+        <h2>Archives &amp; Compression</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="tar archive create files directory bundle">
+                <td class="command-cell">
+                  <span class="command">tar -cf archive.tar &lt;files&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Create an uncompressed tar archive</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="tar extract archive files directory unpack">
+                <td class="command-cell">
+                  <span class="command">tar -xf archive.tar</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Extract a tar archive into the current directory</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="tar list archive contents files">
+                <td class="command-cell">
+                  <span class="command">tar -tf archive.tar</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List the contents of a tar archive without extracting it</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="tar gzip compress archive create tgz">
+                <td class="command-cell">
+                  <span class="command">tar -czf archive.tar.gz &lt;files&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Create a gzip-compressed tar archive</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="tar gzip extract compressed archive">
+                <td class="command-cell">
+                  <span class="command">tar -xzf archive.tar.gz</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Extract a gzip-compressed tar archive</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="tar bzip2 compress archive create">
+                <td class="command-cell">
+                  <span class="command">tar -cjf archive.tar.bz2 &lt;files&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Create a bzip2-compressed tar archive</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="tar xz extract compressed archive xz">
+                <td class="command-cell">
+                  <span class="command">tar -xJf archive.tar.xz</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Extract an xz-compressed tar archive</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="gzip compress file">
+                <td class="command-cell">
+                  <span class="command">gzip &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Compress a file using gzip</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="gunzip decompress gzip file">
+                <td class="command-cell">
+                  <span class="command">gunzip &lt;file&gt;.gz</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Decompress a gzip-compressed file</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="zip archive compress files">
+                <td class="command-cell">
+                  <span class="command">zip archive.zip &lt;files&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Create a ZIP archive</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="unzip extract zip archive files">
+                <td class="command-cell">
+                  <span class="command">unzip archive.zip</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Extract a ZIP archive</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       SYSTEMD & SERVICES
+       ============================================================ -->
+
+  <section class="section searchable-section" id="systemd">
+    <details>
+      <summary>
+        <h2>Services &amp; systemd</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="systemd service status running failed daemon">
+                <td class="command-cell">
+                  <span class="command">systemctl status &lt;service&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display the current status and recent messages for a systemd service</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="systemd service start run daemon">
+                <td class="command-cell">
+                  <span class="command">sudo systemctl start &lt;service&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Start a service immediately</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="systemd service stop daemon shutdown">
+                <td class="command-cell">
+                  <span class="command">sudo systemctl stop &lt;service&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Stop a running service</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="systemd service restart daemon reload restart">
+                <td class="command-cell">
+                  <span class="command">sudo systemctl restart &lt;service&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Stop and start a service again</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="systemd service reload configuration daemon">
+                <td class="command-cell">
+                  <span class="command">sudo systemctl reload &lt;service&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Ask a service to reload its configuration without fully restarting when supported</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="systemd enable service boot startup">
+                <td class="command-cell">
+                  <span class="command">sudo systemctl enable &lt;service&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Configure a service to start automatically according to its unit configuration</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="systemd disable service boot startup">
+                <td class="command-cell">
+                  <span class="command">sudo systemctl disable &lt;service&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Disable automatic startup of a service</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="systemd enabled service startup boot check">
+                <td class="command-cell">
+                  <span class="command">systemctl is-enabled &lt;service&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Check whether a service is enabled for automatic startup</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="systemd active service running check">
+                <td class="command-cell">
+                  <span class="command">systemctl is-active &lt;service&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Check whether a service is currently active</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="systemd list services running loaded units">
+                <td class="command-cell">
+                  <span class="command">systemctl list-units --type=service</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List currently loaded service units</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="systemd daemon reload unit files configuration">
+                <td class="command-cell">
+                  <span class="command">sudo systemctl daemon-reload</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Reload systemd's unit configuration after unit files have changed</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       LOGS
+       ============================================================ -->
+
+  <section class="section searchable-section" id="logs">
+    <details>
+      <summary>
+        <h2>Logs &amp; Diagnostics</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="journalctl systemd logs system journal messages">
+                <td class="command-cell">
+                  <span class="command">journalctl</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>View messages collected by the systemd journal</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="journalctl boot logs current boot system">
+                <td class="command-cell">
+                  <span class="command">journalctl -b</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show journal messages from the current boot</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="journalctl previous boot logs">
+                <td class="command-cell">
+                  <span class="command">journalctl -b -1</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show journal messages from the previous boot, when available</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="journalctl service logs systemd daemon">
+                <td class="command-cell">
+                  <span class="command">journalctl -u &lt;service&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show journal messages associated with a systemd service</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="journalctl follow live logs tail realtime">
+                <td class="command-cell">
+                  <span class="command">journalctl -f</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Follow new journal entries as they are written</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="journalctl priority error warning logs">
+                <td class="command-cell">
+                  <span class="command">journalctl -p err</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show journal messages at error priority and higher severity</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="kernel messages hardware boot errors dmesg">
+                <td class="command-cell">
+                  <span class="command">dmesg</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display messages from the kernel ring buffer</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="kernel messages errors warnings dmesg">
+                <td class="command-cell">
+                  <span class="command">dmesg --level=err,warn</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display kernel messages at error and warning levels</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="log file messages authentication login sudo ssh">
+                <td class="command-cell">
+                  <span class="command">sudo tail -f /var/log/auth.log</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Follow authentication-related log entries on systems that maintain this log file</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       USERS & GROUPS
+       ============================================================ -->
+
+  <section class="section searchable-section" id="users-groups">
+    <details>
+      <summary>
+        <h2>Users &amp; Groups</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="user current username identity whoami">
+                <td class="command-cell">
+                  <span class="command">whoami</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Print the username of the current effective user</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="user identity uid gid groups whoami id">
+                <td class="command-cell">
+                  <span class="command">id</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display user ID, group ID, and group membership information</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="user groups membership current user">
+                <td class="command-cell">
+                  <span class="command">groups</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display the groups to which a user belongs</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="user account create add username">
+                <td class="command-cell">
+                  <span class="command">sudo adduser &lt;username&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Create a new user account using Ubuntu's interactive account-creation utility</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="user account delete remove username home files">
+                <td class="command-cell">
+                  <span class="command">sudo deluser &lt;username&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Remove a user account; additional options control what happens to the user's files</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="user password change account">
+                <td class="command-cell">
+                  <span class="command">passwd</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Change the current user's password</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="user password another account administrator">
+                <td class="command-cell">
+                  <span class="command">sudo passwd &lt;username&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Set or change another user's password with appropriate privileges</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="group create add user group">
+                <td class="command-cell">
+                  <span class="command">sudo addgroup &lt;group&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Create a new group</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="group add user membership permissions">
+                <td class="command-cell">
+                  <span class="command">sudo usermod -aG &lt;group&gt; &lt;user&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Add a user to an additional group without removing existing supplementary groups</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="user accounts logged in sessions who">
+                <td class="command-cell">
+                  <span class="command">who</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show users currently logged into the system</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="last login history users sessions reboot">
+                <td class="command-cell">
+                  <span class="command">last</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display login and logout history from the system's login records</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       TEXT PROCESSING
+       ============================================================ -->
+
+  <section class="section searchable-section" id="text-processing">
+    <details>
+      <summary>
+        <h2>Text Processing</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="text search grep recursive directories files pattern regex">
+                <td class="command-cell">
+                  <span class="command">grep -R &lt;pattern&gt; &lt;path&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Recursively search files under a directory for matching text</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="grep ignore case search text pattern">
+                <td class="command-cell">
+                  <span class="command">grep -i &lt;pattern&gt; &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Search text without distinguishing uppercase and lowercase letters</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="grep line number search text pattern">
+                <td class="command-cell">
+                  <span class="command">grep -n &lt;pattern&gt; &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show matching lines together with their line numbers</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="grep invert no match exclude lines">
+                <td class="command-cell">
+                  <span class="command">grep -v &lt;pattern&gt; &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Print lines that do not match the specified pattern</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="sort text lines alphabetic numeric">
+                <td class="command-cell">
+                  <span class="command">sort &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Sort lines of text</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="sort numeric numbers text">
+                <td class="command-cell">
+                  <span class="command">sort -n &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Sort lines using numerical values</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="sort reverse descending text">
+                <td class="command-cell">
+                  <span class="command">sort -r &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Sort lines in reverse order</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="unique duplicate lines remove uniq text">
+                <td class="command-cell">
+                  <span class="command">uniq</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Filter adjacent duplicate lines from input</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="unique count duplicate lines sort uniq count">
+                <td class="command-cell">
+                  <span class="command">sort &lt;file&gt; | uniq -c</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Sort lines and count occurrences of each unique line</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="cut columns fields delimiter text csv">
+                <td class="command-cell">
+                  <span class="command">cut -d: -f1 /etc/passwd</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Extract the first colon-delimited field from each line</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="awk columns fields text processing pattern">
+                <td class="command-cell">
+                  <span class="command">awk '{print $1}' &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Print the first whitespace-separated field from each input line</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="sed replace text substitution edit stream">
+                <td class="command-cell">
+                  <span class="command">sed 's/old/new/g' &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Replace occurrences of <code>old</code> with <code>new</code> in each input line</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="tr translate characters uppercase lowercase delete text">
+                <td class="command-cell">
+                  <span class="command">tr 'a-z' 'A-Z'</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Translate lowercase ASCII letters to uppercase</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="xargs arguments command pipeline stdin">
+                <td class="command-cell">
+                  <span class="command">xargs &lt;command&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Build command arguments from standard input</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       SSH & REMOTE ACCESS
+       ============================================================ -->
+
+  <section class="section searchable-section" id="ssh">
+    <details>
+      <summary>
+        <h2>SSH &amp; Remote Access</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="ssh remote login server shell connect">
+                <td class="command-cell">
+                  <span class="command">ssh &lt;user&gt;@&lt;host&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Open a secure remote shell session</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="ssh port remote login server custom port">
+                <td class="command-cell">
+                  <span class="command">ssh -p &lt;port&gt; &lt;user&gt;@&lt;host&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Connect to an SSH server listening on a non-default port</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="ssh execute remote command server">
+                <td class="command-cell">
+                  <span class="command">ssh &lt;user&gt;@&lt;host&gt; &lt;command&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Execute a command on a remote host without opening an interactive shell</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="ssh key generate ed25519 public private authentication">
+                <td class="command-cell">
+                  <span class="command">ssh-keygen -t ed25519</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Generate an Ed25519 SSH key pair</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="ssh copy public key authorized keys passwordless login">
+                <td class="command-cell">
+                  <span class="command">ssh-copy-id &lt;user&gt;@&lt;host&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Install the local public SSH key in a remote user's authorized keys</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="scp copy remote file upload download ssh">
+                <td class="command-cell">
+                  <span class="command">scp &lt;file&gt; &lt;user&gt;@&lt;host&gt;:&lt;path&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Copy a local file to a remote host over SSH</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="scp copy remote local download file ssh">
+                <td class="command-cell">
+                  <span class="command">scp &lt;user&gt;@&lt;host&gt;:&lt;path&gt; &lt;local&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Copy a remote file to the local machine over SSH</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="ssh config host aliases configuration">
+                <td class="command-cell">
+                  <span class="command">nano ~/.ssh/config</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Edit the user's SSH client configuration</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <div class="warning">
+          <strong>Security:</strong>
+          Never copy a private SSH key to another machine or publish it.
+          The private key should remain protected on the machine where it
+          was generated.
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       DOWNLOADS & TRANSFERS
+       ============================================================ -->
+
+  <section class="section searchable-section" id="downloads">
+    <details>
+      <summary>
+        <h2>Downloads &amp; Transfers</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="download url file curl web http https">
+                <td class="command-cell">
+                  <span class="command">curl -O &lt;URL&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Download a file using its remote filename</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="curl web http https headers request url">
+                <td class="command-cell">
+                  <span class="command">curl -I &lt;URL&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Request and display HTTP response headers without downloading the response body</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="curl follow redirects download url http https">
+                <td class="command-cell">
+                  <span class="command">curl -L -O &lt;URL&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Download a URL while following HTTP redirects</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="wget download file url recursive web">
+                <td class="command-cell">
+                  <span class="command">wget &lt;URL&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Download a resource from a URL</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="wget continue resume download interrupted">
+                <td class="command-cell">
+                  <span class="command">wget -c &lt;URL&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Resume a partially downloaded file when the server supports it</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       LINKS
+       ============================================================ -->
+
+  <section class="section searchable-section" id="links">
+    <details>
+      <summary>
+        <h2>Links &amp; File Metadata</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="symbolic symlink link shortcut file directory ln">
+                <td class="command-cell">
+                  <span class="command">ln -s &lt;target&gt; &lt;link&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Create a symbolic link pointing to a target file or directory</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="hard link file inode ln">
+                <td class="command-cell">
+                  <span class="command">ln &lt;target&gt; &lt;link&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Create a hard link to a file</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="readlink symbolic link target path">
+                <td class="command-cell">
+                  <span class="command">readlink &lt;link&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display the target referenced by a symbolic link</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="file metadata timestamp permissions owner stat">
+                <td class="command-cell">
+                  <span class="command">stat &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display detailed file metadata including permissions, ownership, size, inode, and timestamps</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="disk inode file links count stat">
+                <td class="command-cell">
+                  <span class="command">stat -c '%i %n' &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display a file's inode number and filename using a custom format</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       SHELL HISTORY
+       ============================================================ -->
+
+  <section class="section searchable-section" id="shell-history">
+    <details>
+      <summary>
+        <h2>Shell History &amp; Shortcuts</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <div class="table-wrap">
+          <table class="operator-table">
+            <thead>
+              <tr>
+                <th>Command / Syntax</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="history shell commands previous history">
+                <td class="command-cell">
+                  <span class="command">history</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display commands stored in the shell history</td>
+              </tr>
+
+              <tr data-keywords="history search previous commands reverse search">
+                <td class="command-cell">
+                  <span class="command">Ctrl + R</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Interactively search backward through shell history in common shells such as Bash</td>
+              </tr>
+
+              <tr data-keywords="history previous command repeat bang">
+                <td class="command-cell">
+                  <span class="command">!!</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Expand to the previous command in shells that support history expansion</td>
+              </tr>
+
+              <tr data-keywords="history previous command sudo rerun">
+                <td class="command-cell">
+                  <span class="command">sudo !!</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Re-run the previous command with sudo; useful after receiving a permission error</td>
+              </tr>
+
+              <tr data-keywords="history command number execute previous">
+                <td class="command-cell">
+                  <span class="command">!&lt;n&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Execute the command with history number <code>n</code> when history expansion is enabled</td>
+              </tr>
+
+              <tr data-keywords="shell clear terminal screen">
+                <td class="command-cell">
+                  <span class="command">clear</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Clear the visible terminal screen</td>
+              </tr>
+
+              <tr data-keywords="shell terminal exit logout close session">
+                <td class="command-cell">
+                  <span class="command">exit</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Exit the current shell or terminate the current shell session</td>
+              </tr>
+
+              <tr data-keywords="shell terminal keyboard interrupt stop command Ctrl C">
+                <td class="command-cell">
+                  <span class="command">Ctrl + C</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Send an interrupt signal to the foreground command in common Unix shells</td>
+              </tr>
+
+              <tr data-keywords="shell terminal suspend command Ctrl Z job">
+                <td class="command-cell">
+                  <span class="command">Ctrl + Z</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Suspend the foreground job and return control to the shell</td>
+              </tr>
+
+              <tr data-keywords="shell terminal eof logout Ctrl D">
+                <td class="command-cell">
+                  <span class="command">Ctrl + D</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Send EOF on an input stream; at an interactive shell prompt this commonly exits the shell</td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       GIT
+       ============================================================ -->
+
+  <section class="section searchable-section" id="git">
+    <details>
+      <summary>
+        <h2>Git</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <p class="section-note">
+          Git is not part of the shell itself, but these commands are
+          commonly useful on Ubuntu development systems.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="git version installed">
+                <td class="command-cell">
+                  <span class="command">git --version</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display the installed Git version</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="git repository initialize create">
+                <td class="command-cell">
+                  <span class="command">git init</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Initialize a new Git repository in the current directory</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="git status repository changes modified staged untracked">
+                <td class="command-cell">
+                  <span class="command">git status</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show the current repository state, including staged, modified, and untracked files</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="git clone repository download remote">
+                <td class="command-cell">
+                  <span class="command">git clone &lt;URL&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Clone an existing remote repository</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="git add stage files changes">
+                <td class="command-cell">
+                  <span class="command">git add &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Stage changes for the next commit</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="git add all stage files changes">
+                <td class="command-cell">
+                  <span class="command">git add .</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Stage changes under the current directory</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="git commit save changes message">
+                <td class="command-cell">
+                  <span class="command">git commit -m "&lt;message&gt;"</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Create a commit containing staged changes</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="git log history commits">
+                <td class="command-cell">
+                  <span class="command">git log --oneline</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display a compact one-line history of commits</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="git diff changes compare working tree">
+                <td class="command-cell">
+                  <span class="command">git diff</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show unstaged changes in tracked files</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="git branch branches list">
+                <td class="command-cell">
+                  <span class="command">git branch</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List local Git branches</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="git branch create switch checkout">
+                <td class="command-cell">
+                  <span class="command">git switch -c &lt;branch&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Create and switch to a new branch</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="git pull remote fetch merge update">
+                <td class="command-cell">
+                  <span class="command">git pull</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Fetch remote changes and integrate them into the current branch according to its configured tracking relationship</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="git push remote upload commits branch">
+                <td class="command-cell">
+                  <span class="command">git push</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Upload local commits to the configured remote repository</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       USEFUL COMMAND COMBINATIONS
+       ============================================================ -->
+
+  <section class="section searchable-section" id="useful-combinations">
+    <details>
+      <summary>
+        <h2>Useful Command Combinations</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <p class="section-note">
+          These examples combine standard Unix commands into practical
+          troubleshooting and administration workflows.
+        </p>
+
+        <div class="table-wrap">
+          <table class="operator-table">
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>What it does</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="find search files directories name recursive">
+                <td class="command-cell">
+                  <span class="command">find . -type f -name "*.log"</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Find regular files ending in <code>.log</code> below the current directory</td>
+              </tr>
+
+              <tr data-keywords="grep search recursive text configuration files">
+                <td class="command-cell">
+                  <span class="command">grep -Rni "error" /var/log</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Recursively search log files for "error", ignoring case and showing line numbers</td>
+              </tr>
+
+              <tr data-keywords="disk largest directories size sort space">
+                <td class="command-cell">
+                  <span class="command">du -h --max-depth=1 | sort -h</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show immediate directory sizes sorted from smallest to largest</td>
+              </tr>
+
+              <tr data-keywords="process search grep ps running">
+                <td class="command-cell">
+                  <span class="command">ps aux | grep &lt;name&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Search the process list for a name or pattern</td>
+              </tr>
+
+              <tr data-keywords="network listening ports services sockets ss grep">
+                <td class="command-cell">
+                  <span class="command">ss -tulpn | grep LISTEN</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show TCP and UDP listening sockets and filter for listening entries</td>
+              </tr>
+
+              <tr data-keywords="file lines count wc pipeline">
+                <td class="command-cell">
+                  <span class="command">cat &lt;file&gt; | wc -l</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Count lines produced by a file; <code>wc -l &lt;file&gt;</code> is simpler when no pipeline is needed</td>
+              </tr>
+
+              <tr data-keywords="search command executable path type which alias shell">
+                <td class="command-cell">
+                  <span class="command">type &lt;command&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show how the shell resolves a command, including aliases, functions, builtins, or executables</td>
+              </tr>
+
+              <tr data-keywords="command path executable whereis binary manual source">
+                <td class="command-cell">
+                  <span class="command">whereis &lt;command&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Locate binary, source, and manual-page files associated with a command when available</td>
+              </tr>
+
+              <tr data-keywords="command path executable location which command">
+                <td class="command-cell">
+                  <span class="command">command -v &lt;command&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Ask the current shell how it resolves a command</td>
+              </tr>
+
+              <tr data-keywords="replace configuration backup sed in place edit file">
+                <td class="command-cell">
+                  <span class="command">sed -i 's/old/new/g' &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Replace text directly in a file; make a backup first when modifying important configuration</td>
+              </tr>
+
+              <tr data-keywords="follow log live tail realtime">
+                <td class="command-cell">
+                  <span class="command">tail -f &lt;logfile&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Follow new lines appended to a log file in real time</td>
+              </tr>
+
+              <tr data-keywords="command output save file tee display stdout">
+                <td class="command-cell">
+                  <span class="command">&lt;command&gt; | tee &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display command output while simultaneously writing it to a file</td>
+              </tr>
+
+              <tr data-keywords="output append tee file save log">
+                <td class="command-cell">
+                  <span class="command">&lt;command&gt; | tee -a &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Display command output while appending it to a file</td>
+              </tr>
+
+              <tr data-keywords="find files permissions chmod executable">
+                <td class="command-cell">
+                  <span class="command">find . -type f -name "*.sh" -exec chmod +x {} \;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Find shell-script files below the current directory and make them executable</td>
+              </tr>
+
+              <tr data-keywords="find files delete remove dangerous recursive">
+                <td class="command-cell">
+                  <span class="command">find . -type f -name "*.tmp" -delete</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Find and delete matching temporary files; review the search first when working with important data</td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <div class="warning">
+          <strong>Be careful:</strong>
+          Commands involving <code>rm</code>, <code>find -delete</code>,
+          <code>chmod</code>, <code>chown</code>, disk devices, and
+          <code>systemctl</code> can make significant system changes.
+          Always verify the target before executing destructive commands.
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+  <section class="section searchable-section" id="command-safety">
+    <details open>
+      <summary>
+        <h2>Commands Not to Run Blindly</h2>
+      </summary>
+
+      <div class="section-content">
+        <p class="section-note">
+          This page never runs commands. Treat any command that can delete data,
+          change disks, alter permissions, or gain administrator access as a
+          change request that needs careful review first.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command pattern</th>
+                <th>Why it is risky</th>
+                <th>Safer habit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-keywords="dangerous destructive delete remove recursive force files directories system data">
+                <td class="command-cell"><span class="command">rm -rf &lt;path&gt;</span></td>
+                <td>Forceful recursive deletion can remove a directory tree without asking for confirmation.</td>
+                <td>Inspect the exact path with <code>pwd</code> and <code>ls</code>; prefer a narrow path and an interactive option.</td>
+              </tr>
+              <tr data-keywords="dangerous find delete files recursive action remove review">
+                <td class="command-cell"><span class="command">find &lt;path&gt; ... -delete</span></td>
+                <td><code>-delete</code> acts on every item matched by the expression, and a broad starting path can have a large effect.</td>
+                <td>Run the same search with <code>-print</code> first and review the list before considering deletion.</td>
+              </tr>
+              <tr data-keywords="dangerous disk filesystem device overwrite dd data storage partition">
+                <td class="command-cell"><span class="command">dd ... of=/dev/&lt;device&gt;</span></td>
+                <td>A mistaken output device can overwrite a disk or partition and destroy data.</td>
+                <td>Identify devices with <code>lsblk -f</code>, verify the target twice, and do not guess device names.</td>
+              </tr>
+              <tr data-keywords="dangerous disk redirect stdout overwrite dev sda hard drive storage device data">
+                <td class="command-cell"><span class="command">any-command &gt; /dev/&lt;device&gt;</span></td>
+                <td>Shell redirection writes command output directly to a block device, potentially replacing filesystem data.</td>
+                <td>Never redirect output to a disk device unless the target and purpose are explicitly verified.</td>
+              </tr>
+              <tr data-keywords="dangerous mkfs wipefs format filesystem disk device erase signatures">
+                <td class="command-cell"><span class="command">mkfs ... /dev/&lt;device&gt;</span> or <span class="command">wipefs -a /dev/&lt;device&gt;</span></td>
+                <td>These can create a filesystem or erase filesystem and partition signatures on the selected device.</td>
+                <td>Unmount the intended device, confirm its identity and backups, and use a documented recovery or installation procedure.</td>
+              </tr>
+              <tr data-keywords="dangerous fdisk parted partition table disk storage delete create resize">
+                <td class="command-cell"><span class="command">fdisk &lt;device&gt;</span> or <span class="command">parted &lt;device&gt;</span></td>
+                <td>Partition-table changes can make an entire disk or operating system unavailable.</td>
+                <td>Use a verified device map and backup; treat every write operation as irreversible until proven otherwise.</td>
+              </tr>
+              <tr data-keywords="dangerous chmod permissions recursive 777 world writable security files directories">
+                <td class="command-cell"><span class="command">chmod -R 777 &lt;path&gt;</span></td>
+                <td>Recursive world-writable permissions can expose or alter files and damage security assumptions.</td>
+                <td>Change only the needed path and permission bits; inspect with <code>ls -ld</code> first.</td>
+              </tr>
+              <tr data-keywords="dangerous fork bomb process resource denial service freeze function pipe background shell">
+                <td class="command-cell"><span class="command">:(){ :|:&amp; };:</span></td>
+                <td>A fork bomb repeatedly creates processes until the system runs out of process or other resources.</td>
+                <td>Do not paste shell functions you do not understand; test resource experiments only in an isolated disposable environment.</td>
+              </tr>
+              <tr data-keywords="dangerous redirect truncate empty file overwrite configuration data shell">
+                <td class="command-cell"><span class="command">&gt; &lt;file&gt;</span></td>
+                <td>A bare output redirect can truncate a file to zero bytes without an external command.</td>
+                <td>Confirm the filename and use a backup before redirecting output into an existing file.</td>
+              </tr>
+              <tr data-keywords="dangerous shell history repeat execute commands history pipe sh bash rerun">
+                <td class="command-cell"><span class="command">history | sh</span></td>
+                <td>This can feed previously recorded commands back into a shell and repeat unintended changes.</td>
+                <td>Review history entries individually; never pipe an entire history into a shell.</td>
+              </tr>
+              <tr data-keywords="dangerous crontab remove delete scheduled jobs tasks automation">
+                <td class="command-cell"><span class="command">crontab -r</span></td>
+                <td>Removes the current user's crontab, deleting scheduled jobs without a normal confirmation prompt.</td>
+                <td>Back up with <code>crontab -l</code> before editing and use <code>crontab -e</code> for changes.</td>
+              </tr>
+              <tr data-keywords="dangerous sudo apt purge remove autoremove packages software dependencies">
+                <td class="command-cell"><span class="command">sudo apt purge &lt;package&gt;</span> or <span class="command">sudo apt autoremove</span></td>
+                <td>Package removal can remove configuration, applications, or dependencies you still need.</td>
+                <td>Read APT's proposed changes and confirm the package list before accepting.</td>
+              </tr>
+              <tr data-keywords="dangerous shell history substitution caret repeat previous command edit rerun typo">
+                <td class="command-cell"><span class="command">^old^new</span></td>
+                <td>In shells that support history substitution, this edits and immediately reruns a previous command.</td>
+                <td>Print and inspect the expanded command before rerunning it; prefer a fresh command when unsure.</td>
+              </tr>
+              <tr data-keywords="dangerous move file dev null overwrite special device system file metadata">
+                <td class="command-cell"><span class="command">mv &lt;file&gt; /dev/null</span></td>
+                <td>Moving a file onto the special <code>/dev/null</code> path can replace that device node and break programs that rely on it.</td>
+                <td>Use <code>rm</code> only after confirming the file, and never treat special paths as ordinary folders.</td>
+              </tr>
+              <tr data-keywords="dangerous curl wget pipe bash sh download execute remote script internet">
+                <td class="command-cell"><span class="command">curl &lt;URL&gt; | bash</span> or <span class="command">wget -O- &lt;URL&gt; | sh</span></td>
+                <td>This downloads text from the network and immediately hands it to a shell with whatever privileges are present.</td>
+                <td>Download, inspect, verify the source and checksum, and run scripts only in a controlled environment.</td>
+              </tr>
+              <tr data-keywords="dangerous archive gunzip gzip untrusted zip bomb decompression disk space storage">
+                <td class="command-cell"><span class="command">gunzip &lt;untrusted-file&gt;.gz</span></td>
+                <td>Untrusted compressed input can expand unexpectedly, consume disk space, or contain files with surprising names and paths.</td>
+                <td>Inspect archive contents and provenance first; extract into a temporary location with sufficient controls.</td>
+              </tr>
+              <tr data-keywords="dangerous remove python apt purge system python dependencies login desktop ubuntu package">
+                <td class="command-cell"><span class="command">sudo apt purge python&lt;version&gt;-minimal</span></td>
+                <td>Removing a Python package used by system tools can break desktop or administrative components.</td>
+                <td>Check package reverse dependencies and avoid removing distribution-managed runtimes without a recovery plan.</td>
+              </tr>
+              <tr data-keywords="dangerous sudo root systemctl stop disable service user account passwd administrator privileges">
+                <td class="command-cell"><span class="command">sudo systemctl disable &lt;service&gt;</span> or <span class="command">sudo userdel &lt;user&gt;</span></td>
+                <td>Administrative service and account changes can interrupt boot, networking, access, or other users' work.</td>
+                <td>Check current status, dependencies, recovery access, and the exact target before changing it.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="warning">
+          <strong>Stop and verify:</strong>
+          A command shown here is an explanation, not a recommendation to run it.
+          When unsure, consult the command's manual and Ubuntu documentation before
+          using <code>sudo</code> or touching a system path or disk device.
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <div id="empty" class="empty">
+    <strong>No matching commands found.</strong>
+    <div class="search-suggestion">
+      Try fewer or broader words, such as
+      <code>file</code>, <code>directory</code>, <code>permissions</code>,
+      <code>search</code>, or <code>output</code>.
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="container">
+    Ubuntu CLI Cheat Sheet ·
+    <a class="back-top" href="#top">Back to top ↑</a>
+  </div>
+</footer>
+
+<script>
+  /*
+   * ================================================================
+   * Local command search
+   * ================================================================
+   *
+   * This deliberately does NOT use fetch(), XMLHttpRequest,
+   * external APIs, or internet search.
+   *
+   * Everything searched is already present in this HTML document.
+   */
+
+  const searchInput = document.getElementById("search");
+  const clearSearchButton = document.getElementById("clearSearch");
+  const resultCount = document.getElementById("resultCount");
+  const emptyState = document.getElementById("empty");
+
+  const allRows = Array.from(
+    document.querySelectorAll("tbody tr[data-keywords]")
+  );
+
+  const sections = Array.from(
+    document.querySelectorAll(".section details")
+  );
+
+  /*
+   * Normalize text so searches such as:
+   *
+   *   "file-permissions"
+   *   "file permissions"
+   *   "FILE PERMISSIONS"
+   *
+   * are treated similarly.
+   */
+  function normalize(text) {
+    return text
+      .toLocaleLowerCase()
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[`"'’]/g, "")
+      .replace(/[_/\\:;,|()[\]{}<>$*=+!?&.-]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function tokenize(text) {
+    return normalize(text)
+      .split(" ")
+      .map(token => token.trim())
+      .filter(Boolean);
+  }
+
+  function normalizeSyntax(text) {
+    return text
+      .toLocaleLowerCase()
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s*(&&|\|\||>>|2>|&>|[|;<>])\s*/g, " $1 ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function tokenizeSyntax(text) {
+    return normalizeSyntax(text)
+      .split(" ")
+      .map(token => token.trim())
+      .filter(Boolean);
+  }
+
+  function getSignificantSyntaxTokens(tokens) {
+    const operators = new Set(["&&", "||", "|", ";", ">", ">>", "<", "2>", "&>"]);
+
+    return tokens.filter((token, index) => {
+      const previous = tokens[index - 1];
+
+      return index === 0 ||
+        operators.has(token) ||
+        operators.has(previous) ||
+        /^-{1,2}[a-z]/i.test(token) ||
+        /^\d+[<>]/.test(token);
+    });
+  }
+
+  /*
+   * Search aliases make natural queries more useful.
+   *
+   * For example:
+   *   "remove directory"
+   *   "delete folder"
+   *   "copy folder"
+   *
+   * can find the expected commands even though the exact wording
+   * isn't identical to the description.
+   */
+  const aliases = {
+  folder: ["directory", "dir"],
+  folders: ["directory", "dir"],
+  dirs: ["directory"],
+  dir: ["directory"],
+
+  delete: ["remove", "erase"],
+  deleting: ["remove"],
+  removed: ["remove"],
+  removing: ["remove"],
+
+  copy: ["cp", "duplicate", "transfer"],
+  copying: ["cp", "duplicate", "transfer"],
+  copied: ["cp"],
+
+  move: ["mv", "transfer"],
+  moving: ["mv", "transfer"],
+  rename: ["mv"],
+  renaming: ["mv"],
+
+  permissions: ["permission", "mode", "access", "chmod"],
+  permission: ["permissions", "mode", "access", "chmod"],
+
+  owner: ["ownership", "chown"],
+  ownership: ["owner", "chown"],
+
+  administrator: ["admin", "sudo", "root"],
+  admin: ["administrator", "sudo", "root"],
+  root: ["administrator", "sudo"],
+
+  package: ["apt", "dpkg", "software"],
+  packages: ["apt", "dpkg", "software"],
+  install: ["apt", "package"],
+  uninstall: ["remove", "purge", "apt"],
+
+  update: ["upgrade", "apt"],
+  upgrade: ["update", "apt"],
+
+  error: ["stderr", "err", "failure"],
+  errors: ["stderr", "err", "failure"],
+  output: ["stdout"],
+  input: ["stdin"],
+
+  pipe: ["pipeline", "stdout", "stdin"],
+  pipes: ["pipeline", "stdout", "stdin"],
+  pipeline: ["pipe"],
+
+  search: ["grep", "find"],
+  searching: ["grep", "find"],
+  find: ["search"],
+  text: ["grep", "sed", "awk"],
+
+  files: ["file"],
+  filename: ["file", "name"],
+  filenames: ["file", "name"],
+
+  docs: ["manual", "help", "documentation"],
+  documentation: ["manual", "help"],
+  help: ["manual"],
+
+  current: ["working"],
+  home: ["~"],
+
+  process: ["pid", "job"],
+  processes: ["pid", "job"],
+  pid: ["process"],
+
+  variable: ["environment"],
+  variables: ["environment"],
+
+  background: ["job"],
+  jobs: ["background", "process"],
+
+  recursive: ["directory", "tree"],
+  wildcard: ["glob"],
+  wildcards: ["glob"],
+
+  disk: ["storage", "filesystem", "space"],
+  storage: ["disk", "filesystem"],
+  space: ["disk", "storage"],
+  memory: ["ram"],
+  cpu: ["processor"],
+
+  network: ["networking", "ip", "interface"],
+  networking: ["network", "ip"],
+  wifi: ["wireless"],
+  wireless: ["wifi"],
+  dns: ["domain", "resolver"],
+  port: ["socket", "network"],
+  ports: ["socket", "network"],
+
+  service: ["systemd", "daemon"],
+  services: ["systemd", "daemon"],
+  daemon: ["service", "systemd"],
+  logs: ["journal", "journalctl"],
+  log: ["journal", "journalctl"],
+
+  remote: ["ssh"],
+  ssh: ["remote"],
+
+  archive: ["tar", "zip"],
+  archives: ["tar", "zip"],
+  compress: ["gzip", "zip", "tar"],
+  compression: ["gzip", "zip", "tar"],
+
+  history: ["shell", "commands"],
+  command: ["shell", "executable"],
+  executable: ["command", "binary"],
+  binary: ["executable", "program"]
+};
+
+  function expandToken(token) {
+    return [
+      token,
+      ...(aliases[token] || [])
+    ];
+  }
+
+  /*
+   * Get the searchable text for a row.
+   */
+  function getRowData(row) {
+    const command = row.querySelector(".command")?.textContent || "";
+    const description = row.querySelector("td:nth-child(2)")?.textContent || "";
+    const manual = row.querySelector(".manual")?.textContent || "";
+    const section = row.closest(".section")?.querySelector("h2")?.textContent || "";
+    const subsection = row.closest("table")?.previousElementSibling?.textContent || "";
+    const keywords = row.dataset.keywords || "";
+
+    const combined = [
+      command,
+      description,
+      manual,
+      section,
+      subsection,
+      keywords
+    ].join(" ");
+
+    return {
+      command,
+      description,
+      normalizedCommand: normalize(command),
+      normalizedDescription: normalize(description),
+      normalizedAll: normalize(combined),
+      tokens: tokenize(combined),
+      syntaxTokens: getSignificantSyntaxTokens(tokenizeSyntax(command))
+    };
+  }
+
+  const rowData = new Map(
+    allRows.map(row => [row, getRowData(row)])
+  );
+
+  /*
+   * Score a single search token against one row.
+   *
+   * Higher score = better match.
+   */
+  function scoreToken(token, data) {
+    let score = 0;
+
+    const expanded = expandToken(token);
+
+    for (const term of expanded) {
+      const normalizedTerm = normalize(term);
+      const isAlias = term !== token;
+      const scoreMultiplier = isAlias ? 0.6 : 1;
+
+      const setScore = value => {
+        score = Math.max(score, value * scoreMultiplier);
+      };
+
+      if (!normalizedTerm) continue;
+
+      /*
+       * Exact command match is strongest.
+       */
+      if (data.normalizedCommand === normalizedTerm) {
+        setScore(120);
+        continue;
+      }
+
+      /*
+       * Command starts with the query.
+       */
+      if (data.normalizedCommand.startsWith(normalizedTerm)) {
+        setScore(100);
+        continue;
+      }
+
+      /*
+       * Exact word in command.
+       */
+      const commandWords = data.normalizedCommand.split(" ");
+
+      if (commandWords.includes(normalizedTerm)) {
+        setScore(90);
+        continue;
+      }
+
+      /*
+       * Word-start match in command.
+       */
+      if (
+        commandWords.some(word => word.startsWith(normalizedTerm))
+      ) {
+        setScore(75);
+        continue;
+      }
+
+      /*
+       * Exact word in the full searchable data.
+       */
+      if (data.tokens.includes(normalizedTerm)) {
+        setScore(50);
+        continue;
+      }
+
+      /*
+       * Word-start match in descriptions/keywords.
+       */
+      if (
+        data.tokens.some(word => word.startsWith(normalizedTerm))
+      ) {
+        setScore(35);
+        continue;
+      }
+
+      /*
+       * Finally allow a substring match.
+       */
+      if (data.normalizedAll.includes(normalizedTerm)) {
+        setScore(20);
+      }
+    }
+
+    return score;
+  }
+
+  function scoreSyntaxToken(token, data) {
+    const normalizedToken = normalizeSyntax(token);
+
+    if (!normalizedToken) return 0;
+    if (data.syntaxTokens.includes(normalizedToken)) return 90;
+    if (data.syntaxTokens.some(word => word.startsWith(normalizedToken))) return 70;
+
+    return 0;
+  }
+
+  /*
+   * Score an entire query.
+   *
+   * Every query word needs to have at least some match.
+   * This makes:
+   *
+   *   copy directory
+   *
+   * behave much better than one giant substring search.
+   */
+  function scoreRow(query, data) {
+    const queryTokens = tokenize(query);
+    const syntaxTokens = getSignificantSyntaxTokens(tokenizeSyntax(query));
+    const hasShellSyntax = /[|&;<>*$?()[\]{}\\]/.test(query) || /(^|\s)-{1,2}[a-z]/i.test(query);
+
+    if (!queryTokens.length || !syntaxTokens.length) return 0;
+
+    if (hasShellSyntax) {
+      let syntaxTotal = 0;
+
+      for (const token of syntaxTokens) {
+        const score = scoreSyntaxToken(token, data);
+
+        if (!score) return 0;
+        syntaxTotal += score;
+      }
+
+      return syntaxTotal + syntaxTokens.length * 8;
+    }
+
+    let total = 0;
+    let matched = 0;
+
+    for (const token of queryTokens) {
+      const score = scoreToken(token, data);
+
+      if (score > 0) {
+        matched++;
+        total += score;
+      }
+    }
+
+    /*
+     * Require every word to match.
+     *
+     * This prevents a search such as:
+     *   "copy permissions"
+     *
+     * from returning every command merely because "copy" is common.
+     */
+    if (matched !== queryTokens.length) {
+      return 0;
+    }
+
+    /*
+     * Small bonus for matching all words.
+     */
+    total += matched * 8;
+
+    return total;
+  }
+
+  /*
+   * Highlight search words without using innerHTML.
+   *
+   * We rebuild the relevant text nodes and wrap matching pieces
+   * in <mark>. This keeps the implementation safe for arbitrary
+   * search input.
+   */
+  function highlightElement(element, query) {
+    if (!element) return;
+
+    const originalText = element.dataset.originalText;
+
+    if (originalText !== undefined) {
+      element.textContent = originalText;
+    } else {
+      element.dataset.originalText = element.textContent;
+    }
+
+    if (!query) return;
+
+    const terms = tokenize(query)
+      .flatMap(expandToken)
+      .map(normalize)
+      .filter(term => term.length > 1);
+
+    if (!terms.length) return;
+
+    const uniqueTerms = [...new Set(terms)]
+      .sort((a, b) => b.length - a.length);
+
+    const escaped = uniqueTerms.map(
+      term => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    );
+
+    const regex = new RegExp(
+      `(${escaped.join("|")})`,
+      "gi"
+    );
+
+    const text = element.textContent;
+
+    if (!regex.test(text)) return;
+
+    /*
+     * Reset regex state after test().
+     */
+    regex.lastIndex = 0;
+
+    const fragment = document.createDocumentFragment();
+    let lastIndex = 0;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        fragment.appendChild(
+          document.createTextNode(
+            text.slice(lastIndex, match.index)
+          )
+        );
+      }
+
+      const mark = document.createElement("mark");
+      mark.className = "search-hit";
+      mark.textContent = match[0];
+
+      fragment.appendChild(mark);
+
+      lastIndex = match.index + match[0].length;
+    }
+
+    if (lastIndex < text.length) {
+      fragment.appendChild(
+        document.createTextNode(text.slice(lastIndex))
+      );
+    }
+
+    element.replaceChildren(fragment);
+  }
+
+  function clearHighlights() {
+    document.querySelectorAll("[data-original-text]").forEach(element => {
+      element.textContent = element.dataset.originalText;
+      delete element.dataset.originalText;
+    });
+  }
+
+  function removeQuotedAndCommentedText(text) {
+    let quote = "";
+    let escaped = false;
+    let result = "";
+
+    for (const character of text) {
+      if (escaped) {
+        escaped = false;
+        result += " ";
+        continue;
+      }
+
+      if (character === "\\" && quote !== "'") {
+        escaped = true;
+        result += " ";
+        continue;
+      }
+
+      if (quote === "comment") {
+        result += character === "\n" ? "\n" : " ";
+        if (character === "\n") quote = "";
+        continue;
+      }
+
+      if (quote) {
+        if (character === quote) quote = "";
+        result += " ";
+        continue;
+      }
+
+      if (character === "'" || character === '"') {
+        quote = character;
+        result += " ";
+        continue;
+      }
+
+      if (character === "#") {
+        result += "\n";
+        quote = "comment";
+        continue;
+      }
+
+      result += character;
+    }
+
+    return result;
+  }
+
+  const safetyRules = [
+    {
+      pattern: /(?:^|[;&|\n])\s*(?:sudo\s+)?rm\s+(?:-(?=[^\s]*r)[^\s]+|--recursive)\b/i,
+      message: "recursive deletion"
+    },
+    {
+      pattern: /\bfind\b[\s\S]*\s-delete\b/i,
+      message: "find deleting matched files"
+    },
+    {
+      pattern: /\bdd\b[\s\S]*\bof\s*=\s*\/dev\//i,
+      message: "writing directly to a disk device"
+    },
+    {
+      pattern: /(?:^|[;&|\n])\s*[^\s]+\s*>\s*\/dev\//i,
+      message: "redirecting output directly to a disk device"
+    },
+    {
+      pattern: /\b(?:mkfs(?:\.[a-z0-9_-]+)?|wipefs|fdisk|parted)\b/i,
+      message: "changing a filesystem or partition"
+    },
+    {
+      pattern: /\bchmod\b[\s\S]*(?:-R|--recursive|\b777\b)/i,
+      message: "broad permission changes"
+    },
+    {
+      pattern: /(?:^|[;&|\n])\s*:\s*\(\)\s*\{\s*:\s*\|\s*:\s*&/i,
+      message: "a fork bomb that can exhaust system resources"
+    },
+    {
+      pattern: /(?:^|[;&|\n])\s*>\s*[^\s]+/i,
+      message: "truncating a file with a bare redirect"
+    },
+    {
+      pattern: /\bhistory\b[\s\S]*\|\s*(?:ba|z)?sh\b/i,
+      message: "replaying shell history through a shell"
+    },
+    {
+      pattern: /(?:^|[;&|\n])\s*\^\S+\^\S+/i,
+      message: "editing and immediately rerunning a previous command"
+    },
+    {
+      pattern: /\bmv\b[\s\S]*\s\/dev\/null\b/i,
+      message: "moving a file onto the special /dev/null path"
+    },
+    {
+      pattern: /\bcrontab\s+-r\b/i,
+      message: "deleting the current user's scheduled jobs"
+    },
+    {
+      pattern: /\b(?:sudo\s+)?apt\s+(?:purge|remove|autoremove)\s+[^\n]*python[^\n]*/i,
+      message: "removing a Python package used by system tools"
+    },
+    {
+      pattern: /\b(?:sudo\s+)?apt\s+(?:purge|remove|autoremove)\b/i,
+      message: "removing packages with administrator privileges"
+    },
+    {
+      pattern: /\b(?:curl|wget)\b[\s\S]*\|\s*(?:sudo\s+)?(?:ba|z)?sh\b/i,
+      message: "piping a download into a shell"
+    },
+    {
+      pattern: /\bgunzip\b\s+[^\n]+/i,
+      message: "extracting an untrusted compressed archive"
+    },
+    {
+      pattern: /\b(?:sudo\s+)?systemctl\s+(?:stop|restart|disable)\b|\b(?:sudo\s+)?(?:userdel|deluser)\b/i,
+      message: "changing services or user accounts"
+    },
+    {
+      pattern: /\b(?:sudo\s+-i|sudo\s+su(?:\s|$)|sudo\s+passwd\s+root)\b/i,
+      message: "opening or configuring a root-level session"
+    }
+  ];
+
+  function updateSafetyNotice(query) {
+    const notice = document.getElementById("commandSafetyNotice");
+
+    if (!notice || !query) {
+      if (notice) {
+        notice.style.display = "none";
+        notice.textContent = "";
+      }
+      return;
+    }
+
+    const candidate = removeQuotedAndCommentedText(query);
+    const matchedRule = safetyRules.find(rule => rule.pattern.test(candidate));
+
+    if (!matchedRule) {
+      notice.style.display = "none";
+      notice.textContent = "";
+      return;
+    }
+
+    notice.textContent = `Review this carefully: it resembles ${matchedRule.message}. This page only searches text and never runs commands.`;
+    notice.style.display = "block";
+  }
+
+  function updateSearch() {
+    const query = searchInput.value.trim();
+
+    clearHighlights();
+    updateSafetyNotice(query);
+
+    clearSearchButton.style.display = query ? "block" : "none";
+
+    /*
+     * Empty search restores everything.
+     */
+    if (!query) {
+      allRows.forEach(row => {
+        row.style.display = "";
+        row.classList.remove("search-match");
+      });
+
+      document.querySelectorAll(".searchable-section").forEach(section => {
+        section.style.display = "";
+        section.querySelectorAll(".table-wrap").forEach(tableWrap => {
+          tableWrap.style.display = "";
+          tableWrap.previousElementSibling?.style.removeProperty("display");
+        });
+      });
+
+      resultCount.textContent = "";
+      emptyState.style.display = "none";
+
+      return;
+    }
+
+    const results = [];
+
+    for (const row of allRows) {
+      const data = rowData.get(row);
+      const score = scoreRow(query, data);
+
+      if (score > 0) {
+        results.push({
+          row,
+          score,
+          data
+        });
+      } else {
+        row.style.display = "none";
+        row.classList.remove("search-match");
+      }
+    }
+
+    /*
+     * Most relevant rows first.
+     *
+     * Ties retain document order.
+     */
+    results.sort((a, b) => b.score - a.score);
+
+    /*
+     * Restore matching rows.
+     */
+    results.forEach(result => {
+      result.row.style.display = "";
+      result.row.classList.add("search-match");
+    });
+
+    /*
+     * Hide sections with no matching rows.
+     */
+    document.querySelectorAll(".searchable-section").forEach(section => {
+      const matchingRows = section.querySelectorAll(
+        "tbody tr.search-match"
+      );
+
+      section.querySelectorAll(".table-wrap").forEach(tableWrap => {
+        const hasMatchingRows = tableWrap.querySelector(
+          "tbody tr.search-match"
+        );
+
+        tableWrap.style.display = hasMatchingRows ? "" : "none";
+
+        const heading = tableWrap.previousElementSibling;
+        if (heading?.matches("h3")) {
+          heading.style.display = hasMatchingRows ? "" : "none";
+        }
+      });
+
+      if (matchingRows.length) {
+        section.style.display = "";
+        section.querySelector("details").open = true;
+      } else {
+        section.style.display = "none";
+      }
+    });
+
+    /*
+     * Highlight command and description text.
+     */
+    results.forEach(result => {
+      highlightElement(
+        result.row.querySelector(".command"),
+        query
+      );
+
+      highlightElement(
+        result.row.querySelector("td:nth-child(2)"),
+        query
+      );
+    });
+
+    const count = results.length;
+
+    resultCount.textContent =
+      `${count} ${count === 1 ? "result" : "results"}`;
+
+    emptyState.style.display =
+      count === 0 ? "block" : "none";
+  }
+
+  searchInput.addEventListener("input", updateSearch);
+
+  clearSearchButton.addEventListener("click", () => {
+    searchInput.value = "";
+    updateSearch();
+    searchInput.focus();
+  });
+
+  /*
+   * Expand/collapse all.
+   */
+  document.getElementById("expandAll").addEventListener("click", () => {
+    sections.forEach(section => {
+      if (section.closest(".section")?.style.display !== "none") {
+        section.open = true;
+      }
+    });
+  });
+
+  document.getElementById("collapseAll").addEventListener("click", () => {
+    sections.forEach(section => {
+      section.open = false;
+    });
+  });
+
+  /*
+   * Keyboard shortcuts:
+   *
+   * Ctrl/Cmd + K → focus search
+   * /            → focus search
+   * Escape       → clear search
+   */
+  document.addEventListener("keydown", event => {
+    const isTyping =
+      ["INPUT", "TEXTAREA", "SELECT"].includes(
+        document.activeElement?.tagName
+      );
+
+    if (
+      (event.ctrlKey || event.metaKey) &&
+      event.key.toLowerCase() === "k"
+    ) {
+      event.preventDefault();
+      searchInput.focus();
+      searchInput.select();
+      return;
+    }
+
+    if (
+      event.key === "/" &&
+      !isTyping
+    ) {
+      event.preventDefault();
+      searchInput.focus();
+      return;
+    }
+
+    if (
+      event.key === "Escape" &&
+      document.activeElement === searchInput
+    ) {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.blur();
+    }
+  });
+
+  /*
+   * Copy command text.
+   *
+   * For commands containing multiple visual elements, only the
+   * actual .command text is copied.
+   */
+  document.querySelectorAll(".copy").forEach(button => {
+    button.addEventListener("click", async () => {
+      const command = button
+        .closest(".command-cell")
+        ?.querySelector(".command");
+
+      if (!command) return;
+
+      const text = command.textContent.trim();
+
+      try {
+        await navigator.clipboard.writeText(text);
+
+        const original = button.textContent;
+        button.textContent = "Copied!";
+
+        setTimeout(() => {
+          button.textContent = original;
+        }, 1200);
+
+      } catch {
+        button.textContent = "Copy failed";
+
+        setTimeout(() => {
+          button.textContent = "Copy";
+        }, 1200);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
