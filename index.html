@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0f14">
+  <meta name="color-scheme" content="dark">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e95420'/%3E%3Ccircle cx='32' cy='17' r='6' fill='white'/%3E%3Ccircle cx='19' cy='41' r='6' fill='white'/%3E%3Ccircle cx='45' cy='41' r='6' fill='white'/%3E%3Cpath d='M32 23a18 18 0 0 0-13 22M23 41a18 18 0 0 0 18 0M41 41a18 18 0 0 0-9-18' fill='none' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
   <meta name="description" content="Practical Ubuntu command-line cheat sheet with fast local search">
   <title>Ubuntu CLI Cheat Sheet</title>
 
@@ -529,6 +533,227 @@
       .table-wrap {
         margin: 0 10px;
       }
+    }
+
+    /* ---------- Standalone mobile refinements ---------- */
+    html {
+      scroll-padding-top: 96px;
+    }
+
+    button,
+    input,
+    summary,
+    .manual {
+      touch-action: manipulation;
+    }
+
+    button {
+      min-height: 44px;
+    }
+
+    .search-clear {
+      min-width: 36px;
+      min-height: 36px;
+    }
+
+    .copy {
+      min-width: 64px;
+      min-height: 40px;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        overflow-x: hidden;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      .hero {
+        padding: 32px 14px 28px;
+      }
+
+      .hero-inner,
+      .container,
+      .search-help,
+      .command-safety-notice {
+        width: min(100% - 20px, 1180px);
+      }
+
+      .ubuntu-mark {
+        width: 48px;
+        height: 48px;
+        font-size: 24px;
+        margin-bottom: 14px;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 10vw, 2.8rem);
+      }
+
+      .subtitle {
+        margin-top: 12px;
+        font-size: .98rem;
+      }
+
+      .tip {
+        margin-top: 18px;
+        padding: 12px 14px;
+      }
+
+      .toolbar {
+        padding: 8px 0;
+      }
+
+      .toolbar-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        align-items: stretch;
+      }
+
+      .search-wrap {
+        grid-column: 1 / -1;
+      }
+
+      .search {
+        min-height: 44px;
+        font-size: 16px;
+      }
+
+      main {
+        padding-top: 24px;
+      }
+
+      .section {
+        margin: 18px 0;
+        scroll-margin-top: 112px;
+      }
+
+      .section summary {
+        min-height: 58px;
+        padding: 14px 15px;
+      }
+
+      h2 {
+        font-size: 1.18rem;
+      }
+
+      h3 {
+        margin-top: 22px;
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+
+      .section-note {
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+
+      /*
+       * Command tables become vertically stacked cards on phones.
+       * Other tables keep horizontal scrolling so their semantics
+       * are not compromised.
+       */
+      .table-wrap:has(.command-cell) {
+        margin: 0 8px;
+        overflow: visible;
+      }
+
+      .table-wrap:has(.command-cell) table {
+        min-width: 0;
+      }
+
+      .table-wrap:has(.command-cell) thead {
+        display: none;
+      }
+
+      .table-wrap:has(.command-cell) tbody,
+      .table-wrap:has(.command-cell) tr {
+        display: block;
+        width: 100%;
+      }
+
+      .table-wrap:has(.command-cell) tbody tr {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .table-wrap:has(.command-cell) tbody tr:last-child {
+        border-bottom: 0;
+      }
+
+      .table-wrap:has(.command-cell) td {
+        display: grid;
+        grid-template-columns: minmax(76px, auto) minmax(0, 1fr);
+        gap: 10px;
+        width: 100%;
+        padding: 7px 0;
+        border-bottom: 0;
+      }
+
+      .table-wrap:has(.command-cell) td::before {
+        color: var(--muted);
+        font-size: .68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+      }
+
+      .table-wrap:has(.command-cell) td:nth-child(1)::before {
+        content: "Command";
+      }
+
+      .table-wrap:has(.command-cell) td:nth-child(2)::before {
+        content: "Description";
+      }
+
+      .table-wrap:has(.command-cell) td:nth-child(3)::before {
+        content: "Manual";
+      }
+
+      .table-wrap:has(.command-cell) .command-cell {
+        width: 100%;
+      }
+
+      .table-wrap:has(.command-cell) .command {
+        max-width: 100%;
+      }
+
+      .table-wrap:has(.command-cell) .copy {
+        display: block;
+        margin: 9px 0 0;
+      }
+
+      .table-wrap:has(.command-cell) .manual {
+        white-space: normal;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .hero {
+        padding-top: 28px;
+      }
+
+      .toolbar-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .search-wrap {
+        grid-column: auto;
+      }
+
+      .table-wrap:has(.command-cell) td {
+        grid-template-columns: 1fr;
+        gap: 3px;
+      }
+
+      .table-wrap:has(.command-cell) td::before {
+        margin-bottom: 2px;
+      }
+    }
+
+    .copy.is-copied {
+      color: var(--green);
+      border-color: rgba(114,213,114,.45);
     }
 
     /* ---------- Print ---------- */
@@ -4796,36 +5021,71 @@ man chmod</code></pre>
    *
    * For commands containing multiple visual elements, only the
    * actual .command text is copied.
+   *
+   * Standalone-file-safe copy handler.
+   * Clipboard API is preferred; file:// and denied-permission contexts
+   * fall back to a temporary textarea + execCommand.
    */
-  document.querySelectorAll(".copy").forEach(button => {
-    button.addEventListener("click", async () => {
-      const command = button
-        .closest(".command-cell")
-        ?.querySelector(".command");
+  (function () {
+    function fallbackCopy(text) {
+      var area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.left = "-9999px";
+      area.style.top = "0";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.focus();
+      area.select();
 
-      if (!command) return;
-
-      const text = command.textContent.trim();
-
+      var ok = false;
       try {
-        await navigator.clipboard.writeText(text);
-
-        const original = button.textContent;
-        button.textContent = "Copied!";
-
-        setTimeout(() => {
-          button.textContent = original;
-        }, 1200);
-
-      } catch {
-        button.textContent = "Copy failed";
-
-        setTimeout(() => {
-          button.textContent = "Copy";
-        }, 1200);
+        ok = document.execCommand("copy");
+      } catch (e) {
+        ok = false;
       }
+
+      document.body.removeChild(area);
+      return ok;
+    }
+
+    function flash(button, success) {
+      var original = button.dataset.copyLabel || "Copy";
+      button.textContent = success ? "Copied" : "Copy manually";
+      button.classList.toggle("is-copied", success);
+
+      window.setTimeout(function () {
+        button.textContent = original;
+        button.classList.remove("is-copied");
+      }, 1400);
+    }
+
+    document.querySelectorAll("button.copy").forEach(function (button) {
+      var cleanButton = button.cloneNode(true);
+      cleanButton.dataset.copyLabel = button.textContent.trim() || "Copy";
+      button.replaceWith(cleanButton);
+
+      cleanButton.addEventListener("click", async function () {
+        var cell = cleanButton.closest(".command-cell");
+        var target = cell ? cell.querySelector(".command") : null;
+        var text = target ? target.textContent.trim() : "";
+        if (!text) return;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          try {
+            await navigator.clipboard.writeText(text);
+            flash(cleanButton, true);
+            return;
+          } catch (e) {
+            /* Fall through for file:// or denied permissions. */
+          }
+        }
+
+        flash(cleanButton, fallbackCopy(text));
+      });
     });
-  });
+  })();
 </script>
 
 </body>
