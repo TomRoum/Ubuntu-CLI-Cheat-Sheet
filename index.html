@@ -2351,6 +2351,64 @@ man chmod</code></pre>
                 <td></td>
               </tr>
 
+              <tr data-keywords="renice change priority running process already started nice">
+                <td class="command-cell">
+                  <span class="command">renice -n 10 -p &lt;PID&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Change the scheduling priority of a process that is already running</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/renice.1.html"
+                     target="_blank" rel="noopener">renice(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="pid find process name binary running pidof">
+                <td class="command-cell">
+                  <span class="command">pidof &lt;name&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Find the process ID(s) of a running program by its binary name</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="background job hangup immune terminal closes persist nohup">
+                <td class="command-cell">
+                  <span class="command">nohup &lt;command&gt; &amp;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Run a command that keeps running after the terminal is closed</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="background job detach shell table survive close disown">
+                <td class="command-cell">
+                  <span class="command">disown %&lt;job&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Remove a background job from the shell's job table so it survives closing the shell</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="signal hangup reload configuration daemon sighup kill 1">
+                <td class="command-cell">
+                  <span class="command">kill -1 &lt;PID&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Send SIGHUP; many daemons treat this as a request to reload configuration</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="list signals names numbers kill available">
+                <td class="command-cell">
+                  <span class="command">kill -l</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List all available signal names and their numbers</td>
+                <td></td>
+              </tr>
+
             </tbody>
           </table>
         </div>
@@ -2360,6 +2418,230 @@ man chmod</code></pre>
           Prefer normal termination with <code>kill &lt;PID&gt;</code> before using
           <code>kill -9</code>. SIGKILL does not give the process an opportunity
           to clean up.
+        </div>
+
+        <h3>Common Signals</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Signal</th>
+                <th>Number</th>
+                <th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-keywords="sighup signal hangup reload configuration terminal">
+                <td class="command-cell"><span class="command">SIGHUP</span></td>
+                <td>1</td>
+                <td>Terminal closed, or a request for a daemon to reload its configuration</td>
+              </tr>
+              <tr data-keywords="sigint signal interrupt ctrl c">
+                <td class="command-cell"><span class="command">SIGINT</span></td>
+                <td>2</td>
+                <td>Interrupt from the keyboard, normally triggered by <code>Ctrl</code>+<code>C</code></td>
+              </tr>
+              <tr data-keywords="sigterm signal default terminate graceful kill">
+                <td class="command-cell"><span class="command">SIGTERM</span></td>
+                <td>15</td>
+                <td>Default, polite request to terminate; a process may catch it and clean up first</td>
+              </tr>
+              <tr data-keywords="sigkill signal force kill cannot be caught 9">
+                <td class="command-cell"><span class="command">SIGKILL</span></td>
+                <td>9</td>
+                <td>Immediate, forceful termination that cannot be caught or ignored</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Terminal Multiplexers</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="screen start session persistent terminal multiplexer">
+                <td class="command-cell">
+                  <span class="command">screen</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Start a new persistent terminal session; may need to be installed</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="screen reattach resume detached session">
+                <td class="command-cell">
+                  <span class="command">screen -r</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Reattach to a detached <code>screen</code> session</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="screen list sessions running detached">
+                <td class="command-cell">
+                  <span class="command">screen -ls</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List existing <code>screen</code> sessions</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="tmux start session persistent terminal multiplexer modern">
+                <td class="command-cell">
+                  <span class="command">tmux</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Start a new persistent terminal session; may need to be installed</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="tmux reattach resume attach session">
+                <td class="command-cell">
+                  <span class="command">tmux attach</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Reattach to the most recent detached <code>tmux</code> session</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="tmux list sessions running">
+                <td class="command-cell">
+                  <span class="command">tmux ls</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List existing <code>tmux</code> sessions</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <p class="section-note">
+          Both <code>screen</code> and <code>tmux</code> keep a session running on
+          the server even if your SSH connection drops. Detach with
+          <code>Ctrl</code>+<code>A</code> then <code>D</code> in <code>screen</code>,
+          or <code>Ctrl</code>+<code>B</code> then <code>D</code> in <code>tmux</code>.
+        </p>
+
+        <h3>Who's on the System</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="logged in users what they are doing w command">
+                <td class="command-cell">
+                  <span class="command">w</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show who is logged in and what they are currently running</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="logged in users list who">
+                <td class="command-cell">
+                  <span class="command">who</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List users currently logged in to the system</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="send message another user terminal write">
+                <td class="command-cell">
+                  <span class="command">write &lt;user&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Send a message directly to another logged-in user's terminal</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="broadcast message all logged in users wall">
+                <td class="command-cell">
+                  <span class="command">wall '&lt;message&gt;'</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Broadcast a message to every logged-in user's terminal</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Building Commands with xargs</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="xargs null separated filenames spaces safe delete find print0">
+                <td class="command-cell">
+                  <span class="command">find . -print0 | xargs -0 &lt;command&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Safely pass filenames that may contain spaces or newlines to another command</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/xargs.1.html"
+                     target="_blank" rel="noopener">xargs(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="xargs one argument at a time single per command">
+                <td class="command-cell">
+                  <span class="command">&lt;command&gt; | xargs -n 1 &lt;other-command&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Run another command once for each single input item</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="xargs parallel processes multiple at once speed up">
+                <td class="command-cell">
+                  <span class="command">&lt;command&gt; | xargs -P 4 -n 1 &lt;other-command&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Run up to 4 invocations of a command in parallel</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="xargs kill process by name pattern together">
+                <td class="command-cell">
+                  <span class="command">pgrep &lt;name&gt; | xargs kill</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Terminate every process whose PID was found by <code>pgrep</code></td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
         </div>
 
       </div>
@@ -2687,6 +2969,170 @@ man chmod</code></pre>
           </table>
         </div>
 
+        <h3>Firewall (ufw)</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="firewall status active rules ufw verbose">
+                <td class="command-cell">
+                  <span class="command">sudo ufw status verbose</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show whether the firewall is active and list its current rules</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man8/ufw.8.html"
+                     target="_blank" rel="noopener">ufw(8)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="firewall allow port tcp incoming traffic ufw">
+                <td class="command-cell">
+                  <span class="command">sudo ufw allow &lt;port&gt;/tcp</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Allow incoming TCP traffic on a specific port</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="firewall allow ssh openssh application profile ufw">
+                <td class="command-cell">
+                  <span class="command">sudo ufw allow OpenSSH</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Allow SSH access using the registered OpenSSH application profile</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="firewall deny block port ufw">
+                <td class="command-cell">
+                  <span class="command">sudo ufw deny &lt;port&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Block traffic on a specific port</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="firewall remove rule delete allow ufw">
+                <td class="command-cell">
+                  <span class="command">sudo ufw delete allow &lt;port&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Remove a previously added allow rule</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="firewall turn on enable ufw">
+                <td class="command-cell">
+                  <span class="command">sudo ufw enable</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Turn the firewall on and enable it at boot</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="firewall turn off disable ufw">
+                <td class="command-cell">
+                  <span class="command">sudo ufw disable</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Turn the firewall off</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="low level netfilter rules list inspect iptables">
+                <td class="command-cell">
+                  <span class="command">sudo iptables -L -n -v</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List the low-level netfilter rules that <code>ufw</code> manages, without changing anything</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <p class="section-note">
+          Ubuntu uses <code>ufw</code> as its standard firewall front end; it
+          configures <code>iptables</code>/<code>nftables</code> underneath.
+          Prefer <code>ufw</code> for everyday rule changes and reserve direct
+          <code>iptables</code> use for inspection or advanced cases.
+        </p>
+
+        <h3>Packet Capture</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="capture packets interface network traffic tcpdump">
+                <td class="command-cell">
+                  <span class="command">sudo tcpdump -i &lt;interface&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Capture and print packets on a network interface</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man8/tcpdump.8.html"
+                     target="_blank" rel="noopener">tcpdump(8)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="capture packets no dns resolution numeric fast tcpdump">
+                <td class="command-cell">
+                  <span class="command">sudo tcpdump -i &lt;interface&gt; -n</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Capture without resolving hostnames or port names, for faster and clearer output</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="capture packets filter specific port tcpdump">
+                <td class="command-cell">
+                  <span class="command">sudo tcpdump -i &lt;interface&gt; port &lt;port&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Capture only traffic to or from a specific port</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="capture packets save file wireshark analyze later tcpdump">
+                <td class="command-cell">
+                  <span class="command">sudo tcpdump -i &lt;interface&gt; -w &lt;file&gt;.pcap</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Save captured packets to a file for later analysis, for example in Wireshark</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <div class="warning">
+          <strong>Note:</strong>
+          Capturing traffic usually requires <code>sudo</code> and may be
+          restricted by network policy. Only capture traffic on networks and
+          interfaces you are authorized to monitor.
+        </div>
+
       </div>
     </details>
   </section>
@@ -2824,6 +3270,154 @@ man chmod</code></pre>
 
 
   <!-- ============================================================
+       COMPILING & BUILD TOOLS
+       ============================================================ -->
+
+  <section class="section searchable-section" id="compiling">
+    <details>
+      <summary>
+        <h2>Compiling &amp; Build Tools</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="install compiler build tools gcc make essential">
+                <td class="command-cell">
+                  <span class="command">sudo apt install build-essential</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Install <code>gcc</code>, <code>g++</code>, <code>make</code>, and other core build tools</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="compile c program source executable gcc">
+                <td class="command-cell">
+                  <span class="command">gcc -o &lt;program&gt; &lt;file&gt;.c</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Compile a C source file into an executable</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/gcc.1.html"
+                     target="_blank" rel="noopener">gcc(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="compile warnings extra strict gcc c">
+                <td class="command-cell">
+                  <span class="command">gcc -Wall -Wextra -o &lt;program&gt; &lt;file&gt;.c</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Compile with additional compiler warnings enabled</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="compile c++ program source executable g++">
+                <td class="command-cell">
+                  <span class="command">g++ -o &lt;program&gt; &lt;file&gt;.cpp</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Compile a C++ source file into an executable</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="build project makefile rules make">
+                <td class="command-cell">
+                  <span class="command">make</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Build a project using the rules in a <code>Makefile</code> in the current directory</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/make.1.html"
+                     target="_blank" rel="noopener">make(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="build from source install classic sequence configure make install">
+                <td class="command-cell">
+                  <span class="command">./configure &amp;&amp; make &amp;&amp; sudo make install</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Classic three-step sequence used to build and install many source packages</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="shared libraries dependencies binary check ldd">
+                <td class="command-cell">
+                  <span class="command">ldd &lt;binary&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List the shared libraries a compiled binary depends on</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/ldd.1.html"
+                     target="_blank" rel="noopener">ldd(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="trace system calls signals debug diagnose program strace">
+                <td class="command-cell">
+                  <span class="command">strace &lt;command&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Trace the system calls and signals a program makes; useful for diagnosing failures without recompiling</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/strace.1.html"
+                     target="_blank" rel="noopener">strace(1)</a>
+                </td>
+              </tr>
+
+              <tr data-keywords="trace attach running process pid strace">
+                <td class="command-cell">
+                  <span class="command">strace -p &lt;PID&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Attach to and trace an already-running process</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="debugger gnu debug program crash gdb">
+                <td class="command-cell">
+                  <span class="command">gdb &lt;binary&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Start the GNU debugger on a compiled program</td>
+                <td>
+                  <a class="manual"
+                     href="https://manpages.ubuntu.com/manpages/resolute/man1/gdb.1.html"
+                     target="_blank" rel="noopener">gdb(1)</a>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <p class="section-note">
+          <code>strace</code> and <code>gdb</code> are diagnostic tools and may
+          need to be installed separately, for example with
+          <code>sudo apt install strace gdb</code>.
+        </p>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
        SYSTEMD & SERVICES
        ============================================================ -->
 
@@ -2945,8 +3539,223 @@ man chmod</code></pre>
                 <td></td>
               </tr>
 
+              <tr data-keywords="systemd list scheduled timers active next run cron alternative">
+                <td class="command-cell">
+                  <span class="command">systemctl list-timers</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List active and scheduled systemd timers, and when they will next run</td>
+                <td></td>
+              </tr>
+
             </tbody>
           </table>
+        </div>
+
+        <div class="quick-tip">
+          <h3 style="margin:0 0 12px;">Writing a Unit File</h3>
+
+          <p>
+            A minimal service unit saved as
+            <code>/etc/systemd/system/myjob.service</code>:
+          </p>
+
+          <pre><code>[Unit]
+Description=My custom job
+
+[Service]
+ExecStart=/usr/local/bin/myjob.sh
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+          <p>Then load and start it:</p>
+
+          <pre><code>sudo systemctl daemon-reload
+sudo systemctl enable --now myjob.service</code></pre>
+        </div>
+
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ============================================================
+       DOCKER BASICS
+       ============================================================ -->
+
+  <section class="section searchable-section" id="docker">
+    <details>
+      <summary>
+        <h2>Docker Basics</h2>
+      </summary>
+
+      <div class="section-content">
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Manual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr data-keywords="docker check version installed">
+                <td class="command-cell">
+                  <span class="command">docker --version</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Check the installed Docker version</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="docker search hub images find">
+                <td class="command-cell">
+                  <span class="command">docker search &lt;term&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Search Docker Hub for images</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="docker download image without running pull">
+                <td class="command-cell">
+                  <span class="command">docker pull &lt;image&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Download an image without running it</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="docker run container start image basic">
+                <td class="command-cell">
+                  <span class="command">docker run &lt;image&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Run a container from an image</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="docker run background port mapping detached">
+                <td class="command-cell">
+                  <span class="command">docker run -d -p 8080:80 &lt;image&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Run a container in the background, mapping host port 8080 to container port 80</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="docker run interactive shell terminal inside container">
+                <td class="command-cell">
+                  <span class="command">docker run -it &lt;image&gt; /bin/sh</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Run a container interactively with a shell</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="docker run remove automatically after exit temporary">
+                <td class="command-cell">
+                  <span class="command">docker run --rm &lt;image&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Run a container and automatically remove it once it exits</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="docker list running containers ps">
+                <td class="command-cell">
+                  <span class="command">docker ps</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List running containers</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="docker list all containers including stopped">
+                <td class="command-cell">
+                  <span class="command">docker ps -a</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>List all containers, including stopped ones</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="docker logs output container show">
+                <td class="command-cell">
+                  <span class="command">docker logs &lt;container&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show a container's logged output</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="docker exec shell inside running container attach">
+                <td class="command-cell">
+                  <span class="command">docker exec -it &lt;container&gt; /bin/sh</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Open a shell inside an already-running container</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="docker resource usage cpu memory snapshot stats">
+                <td class="command-cell">
+                  <span class="command">docker stats --no-stream</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Show a one-time snapshot of container resource usage</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="docker stop running container">
+                <td class="command-cell">
+                  <span class="command">docker stop &lt;container&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Stop a running container</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="docker remove delete stopped container">
+                <td class="command-cell">
+                  <span class="command">docker rm &lt;container&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Remove a stopped container</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="docker remove delete downloaded image">
+                <td class="command-cell">
+                  <span class="command">docker image rm &lt;image&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Remove a downloaded image</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="docker cleanup unused containers networks dangling images prune">
+                <td class="command-cell">
+                  <span class="command">docker system prune</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Remove unused containers, networks, and dangling images</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <div class="warning">
+          <strong>Warning:</strong>
+          <code>docker system prune -a --volumes</code> also deletes unused
+          images and volumes, which can include data you still need. Run
+          <code>docker system df</code> first to see what would be affected.
         </div>
 
       </div>
@@ -3347,6 +4156,51 @@ man chmod</code></pre>
                 <td></td>
               </tr>
 
+              <tr data-keywords="expand tabs spaces convert text">
+                <td class="command-cell">
+                  <span class="command">expand &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Convert tab characters to spaces</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="unexpand spaces tabs convert leading text">
+                <td class="command-cell">
+                  <span class="command">unexpand &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Convert leading spaces back into tab characters</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="column align table format whitespace separated">
+                <td class="command-cell">
+                  <span class="command">column -t &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Format whitespace-separated input into neatly aligned columns</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="fold wrap long lines fixed width">
+                <td class="command-cell">
+                  <span class="command">fold -w 80 &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Wrap long lines to a fixed width</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="number lines file nl numbering">
+                <td class="command-cell">
+                  <span class="command">nl &lt;file&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Number the lines of a file</td>
+                <td></td>
+              </tr>
+
             </tbody>
           </table>
         </div>
@@ -3448,6 +4302,15 @@ man chmod</code></pre>
                   <button class="copy">Copy</button>
                 </td>
                 <td>Edit the user's SSH client configuration</td>
+                <td></td>
+              </tr>
+
+              <tr data-keywords="sftp interactive file transfer secure remote">
+                <td class="command-cell">
+                  <span class="command">sftp &lt;user&gt;@&lt;host&gt;</span>
+                  <button class="copy">Copy</button>
+                </td>
+                <td>Open an interactive secure file-transfer session over SSH</td>
                 <td></td>
               </tr>
 
@@ -4162,6 +5025,21 @@ man chmod</code></pre>
                 <td>Administrative service and account changes can interrupt boot, networking, access, or other users' work.</td>
                 <td>Check current status, dependencies, recovery access, and the exact target before changing it.</td>
               </tr>
+              <tr data-keywords="dangerous firewall flush rules remove all filtering exposed iptables ufw reset">
+                <td class="command-cell"><span class="command">sudo iptables -F</span> or <span class="command">sudo ufw --force reset</span></td>
+                <td>Flushing or resetting firewall rules removes all filtering immediately, potentially exposing services to the network.</td>
+                <td>Review current rules with <code>sudo ufw status verbose</code> or <code>sudo iptables -L</code> first, and change rules incrementally.</td>
+              </tr>
+              <tr data-keywords="dangerous docker prune delete all unused images containers volumes data">
+                <td class="command-cell"><span class="command">docker system prune -a --volumes</span></td>
+                <td>This deletes all unused images, stopped containers, networks, and volumes, which can include data you still need.</td>
+                <td>Run <code>docker system df</code> first, and prune without <code>-a --volumes</code> to keep named volumes and recently built images.</td>
+              </tr>
+              <tr data-keywords="dangerous chroot jail escape not sandbox isolation security">
+                <td class="command-cell"><span class="command">chroot &lt;dir&gt;</span></td>
+                <td>A chroot is not a security sandbox; a privileged process inside it can still escape to the real root filesystem.</td>
+                <td>Use <code>chroot</code> only for its intended purpose, such as rescue or build environments, never as an isolation boundary for untrusted code.</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -4805,6 +5683,14 @@ man chmod</code></pre>
     {
       pattern: /\b(?:sudo\s+-i|sudo\s+su(?:\s|$)|sudo\s+passwd\s+root)\b/i,
       message: "opening or configuring a root-level session"
+    },
+    {
+      pattern: /\biptables\s+(?:-F|--flush)\b|\bufw\s+--force\s+reset\b/i,
+      message: "flushing or resetting all firewall rules"
+    },
+    {
+      pattern: /\bdocker\s+system\s+prune\b[\s\S]*(?:-a|--all)[\s\S]*--volumes\b|\bdocker\s+system\s+prune\b[\s\S]*--volumes[\s\S]*(?:-a|--all)\b/i,
+      message: "deleting all unused Docker images, containers, and volumes"
     }
   ];
 
